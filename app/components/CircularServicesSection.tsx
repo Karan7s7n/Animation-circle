@@ -24,7 +24,7 @@ const services = [
     title: "Audits",
     subtitle: "AUDITS",
     desc: "Inspection-ready audit systems designed for regulated environments.",
-    image: "/icon.png",
+    image: "/Icon.png",
   },
   {
     title: "Training",
