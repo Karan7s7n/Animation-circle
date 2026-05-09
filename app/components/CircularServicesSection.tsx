@@ -89,7 +89,7 @@ export default function CircularServicesSection() {
           scrollTrigger: {
             trigger: sectionRef.current,
             start: "top top",
-            end: "+=20000",
+            end: "+=15000",
             scrub: 2,
             pin: true,
             anticipatePin: 1,
