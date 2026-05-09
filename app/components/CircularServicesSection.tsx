@@ -256,12 +256,14 @@ export default function CircularServicesSection() {
       // =====================================
 
       gsap.to(".active-dot", {
-        scale: 1.8,
-        duration: 1.5,
-        repeat: -1,
-        yoyo: true,
-        ease: "sine.inOut",
-      });
+  scale: 1.8,
+  filter:
+    "drop-shadow(0 0 8px rgba(255,255,255,0.9)) drop-shadow(0 0 22px rgba(56,189,248,0.8))",
+  duration: 1.8,
+  repeat: -1,
+  yoyo: true,
+  ease: "sine.inOut",
+});
 
       // =====================================
       // ROTATIONS
@@ -390,8 +392,13 @@ export default function CircularServicesSection() {
 
               <div className="absolute right-[-20px] top-1/2 h-[90px] w-[90px] -translate-y-1/2 rounded-full bg-cyan-200/30 blur-[40px]" />
 
-              <div className="active-dot absolute right-[-4px] top-1/2 z-20 h-2.5 w-2.5 -translate-y-1/2 rounded-full bg-white opacity-0" />
-            </div>
+             
+            <div className="active-dot absolute right-[-8px] top-1/2 z-20 h-5 w-5 -translate-y-1/2 rounded-full opacity-0">
+  <div className="absolute inset-0 rounded-full bg-gradient-to-r from-cyan-300 via-white to-cyan-400 blur-[2px]" />
+
+  <div className="absolute inset-[3px] rounded-full bg-white" />
+</div>
+</div>
 
             {/* ICONS */}
             {iconOrder.map((service, i) => (
