@@ -71,14 +71,37 @@ export default function CircularServicesSection() {
         gsap.set(".arc-gradient-wrapper", { opacity: 0 });
 
         // ── AMBIENT ────────────────────────────────────────────
-        gsap.to(".center-core", {
-          boxShadow: "0 0 50px rgba(255,255,255,0.14), 0 0 140px rgba(56,189,248,0.28), inset 0 0 40px rgba(255,255,255,0.08)",
-          duration: 3, repeat: -1, yoyo: true, ease: "sine.inOut",
-        });
-        gsap.to(".center-logo", {
-          filter: "brightness(3) drop-shadow(0 0 12px rgba(255,255,255,1)) drop-shadow(0 0 40px rgba(56,189,248,0.7))",
-          duration: 3, repeat: -1, yoyo: true, ease: "sine.inOut",
-        });
+        let t = 0;
+
+gsap.ticker.add(() => {
+  t += 0.01; // speed control
+
+  const wave = (Math.sin(t) + 1) / 2; // 0 → 1 smooth loop
+
+  const glow1 = 30 + wave * 20;
+  const glow2 = 100 + wave * 40;
+  const inset = 20 + wave * 20;
+
+  const brightness = 2 + wave * 1;
+  const blur = 8 + wave * 4;
+  const glow = 25 + wave * 15;
+
+  gsap.set(".center-core", {
+    boxShadow: `
+      0 0 ${glow1}px rgba(255,255,255,0.14),
+      0 0 ${glow2}px rgba(56,189,248,0.28),
+      inset 0 0 ${inset}px rgba(255,255,255,0.08)
+    `,
+  });
+
+  gsap.set(".center-logo", {
+    filter: `
+      brightness(${brightness})
+      drop-shadow(0 0 ${blur}px rgba(255,255,255,1))
+      drop-shadow(0 0 ${glow}px rgba(56,189,248,0.7))
+    `,
+  });
+});
         gsap.to(".active-dot", {
           scale: 1.7, duration: 2.2, repeat: -1, yoyo: true, ease: "sine.inOut",
           filter: "drop-shadow(0 0 10px rgba(255,255,255,0.95)) drop-shadow(0 0 25px rgba(56,189,248,0.8))",
