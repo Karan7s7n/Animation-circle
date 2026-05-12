@@ -10,7 +10,8 @@ gsap.registerPlugin(ScrollTrigger);
 const introContent = {
   title: "Services",
   subtitle: "WHAT WE DO",
-  desc: "We provide expert consulting, audits, training and search services to the life sciences sector.",};
+  desc: "We provide expert consulting, audits, training and search services to the life sciences sector.",
+};
 
 const services = [
   {
@@ -40,18 +41,18 @@ const services = [
 ];
 
 const T = {
-  introOut:  0,
-  orbitIn:   5,
+  introOut: 0,
+  orbitIn: 5,
   service1In: 10,
-  rot1:      20,
-  rot2:      45,
-  rot3:      70,
-  end:       95,
+  rot1: 20,
+  rot2: 45,
+  rot3: 70,
+  end: 95,
 };
 
 export default function CircularServicesSection() {
-  const sectionRef  = useRef<HTMLDivElement>(null);
-  const orbitRef    = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const orbitRef = useRef<HTMLDivElement>(null);
   const contentRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
@@ -59,52 +60,64 @@ export default function CircularServicesSection() {
 
     const initTimer = setTimeout(() => {
       const ctx = gsap.context(() => {
-
         // ── INITIAL STATE ──────────────────────────────────────
+        // Set all content cards to their initial state immediately
         contentRefs.current.forEach((el, i) => {
           if (!el) return;
-          gsap.set(el, { opacity: i === 0 ? 1 : 0, y: i === 0 ? 0 : 40 });
+          if (i === 0) {
+            // Intro is visible at start
+            gsap.set(el, { opacity: 1, y: 0, visibility: "visible" });
+          } else {
+            // All service cards start hidden and offset
+            gsap.set(el, { opacity: 0, y: 40, visibility: "visible" });
+          }
         });
-        gsap.set(".orbit-wrapper",        { opacity: 0, scale: 0.92 });
-        gsap.set(".right-glow",           { opacity: 0 });
-        gsap.set(".icon-keep-straight",   { rotation: 0 });
+
+        gsap.set(".orbit-wrapper", { opacity: 0, scale: 0.92 });
+        gsap.set(".right-glow", { opacity: 0 });
+        gsap.set(".icon-keep-straight", { rotation: 0 });
         gsap.set(".arc-gradient-wrapper", { opacity: 0 });
 
         // ── AMBIENT ────────────────────────────────────────────
         let t = 0;
 
-gsap.ticker.add(() => {
-  t += 0.01; // speed control
+        gsap.ticker.add(() => {
+          t += 0.01;
+          const wave = (Math.sin(t) + 1) / 2;
 
-  const wave = (Math.sin(t) + 1) / 2; // 0 → 1 smooth loop
+          const glow1 = 30 + wave * 20;
+          const glow2 = 100 + wave * 40;
+          const inset = 20 + wave * 20;
 
-  const glow1 = 30 + wave * 20;
-  const glow2 = 100 + wave * 40;
-  const inset = 20 + wave * 20;
+          const brightness = 2 + wave * 1;
+          const blur = 8 + wave * 4;
+          const glow = 25 + wave * 15;
 
-  const brightness = 2 + wave * 1;
-  const blur = 8 + wave * 4;
-  const glow = 25 + wave * 15;
+          gsap.set(".center-core", {
+            boxShadow: `
+              0 0 ${glow1}px rgba(255,255,255,0.14),
+              0 0 ${glow2}px rgba(56,189,248,0.28),
+              inset 0 0 ${inset}px rgba(255,255,255,0.08)
+            `,
+          });
 
-  gsap.set(".center-core", {
-    boxShadow: `
-      0 0 ${glow1}px rgba(255,255,255,0.14),
-      0 0 ${glow2}px rgba(56,189,248,0.28),
-      inset 0 0 ${inset}px rgba(255,255,255,0.08)
-    `,
-  });
+          gsap.set(".center-logo", {
+            filter: `
+              brightness(${brightness})
+              drop-shadow(0 0 ${blur}px rgba(255,255,255,1))
+              drop-shadow(0 0 ${glow}px rgba(56,189,248,0.7))
+            `,
+          });
+        });
 
-  gsap.set(".center-logo", {
-    filter: `
-      brightness(${brightness})
-      drop-shadow(0 0 ${blur}px rgba(255,255,255,1))
-      drop-shadow(0 0 ${glow}px rgba(56,189,248,0.7))
-    `,
-  });
-});
         gsap.to(".active-dot", {
-          scale: 1.7, duration: 2.2, repeat: -1, yoyo: true, ease: "sine.inOut",
-          filter: "drop-shadow(0 0 10px rgba(255,255,255,0.95)) drop-shadow(0 0 25px rgba(56,189,248,0.8))",
+          scale: 1.7,
+          duration: 2.2,
+          repeat: -1,
+          yoyo: true,
+          ease: "sine.inOut",
+          filter:
+            "drop-shadow(0 0 10px rgba(255,255,255,0.95)) drop-shadow(0 0 25px rgba(56,189,248,0.8))",
         });
 
         // ── MAIN TIMELINE ──────────────────────────────────────
@@ -113,65 +126,128 @@ gsap.ticker.add(() => {
             trigger: sectionRef.current,
             start: "top top",
             end: "+=15000",
-            scrub: 2,
+            scrub: 1.5, // Slightly faster scrub for smoother response
             pin: true,
             anticipatePin: 1,
             snap: {
               snapTo: [0, 0.1, 0.2, 0.45, 0.7, 0.95, 1],
-              duration: { min: 0.5, max: 1.0 },
+              duration: { min: 0.4, max: 0.8 },
               ease: "power2.inOut",
-              delay: 0.1,
+              delay: 0.05,
               directional: true,
             },
           },
         });
 
         // Phase 0→10: intro out, orbit + arc in, service 1 in
-        tl.to(contentRefs.current[0],
-          { opacity: 0, y: -40, duration: T.orbitIn - T.introOut, ease: "power2.inOut" },
+        // Fade out intro
+        tl.to(
+          contentRefs.current[0],
+          {
+            opacity: 0,
+            y: -30,
+            duration: T.orbitIn - T.introOut,
+            ease: "power2.out",
+          },
           T.introOut
         );
-        tl.to(".orbit-wrapper",
-          { opacity: 1, scale: 1, duration: 8, ease: "power3.out" }, T.orbitIn);
-        tl.to(".right-glow",
-          { opacity: 1, duration: 8, ease: "power2.out" }, T.orbitIn);
-        tl.to(".arc-gradient-wrapper",
-          { opacity: 1, duration: 8, ease: "power2.out" }, T.orbitIn);
-        tl.to(contentRefs.current[1],
-          { opacity: 1, y: 0, duration: 6, ease: "power3.out" }, T.service1In);
+
+        // Bring in orbit elements
+        tl.to(
+          ".orbit-wrapper",
+          { opacity: 1, scale: 1, duration: 6, ease: "power2.out" },
+          T.orbitIn
+        );
+        tl.to(
+          ".right-glow",
+          { opacity: 1, duration: 6, ease: "power2.out" },
+          T.orbitIn
+        );
+        tl.to(
+          ".arc-gradient-wrapper",
+          { opacity: 1, duration: 6, ease: "power2.out" },
+          T.orbitIn
+        );
+
+        // Fade in Consulting card - start slightly earlier and use smoother easing
+        tl.to(
+          contentRefs.current[1],
+          {
+            opacity: 1,
+            y: 0,
+            duration: 8,
+            ease: "power2.out",
+          },
+          T.orbitIn + 2 // Start fading in as orbit appears
+        );
 
         // Phase rot1: -90° → Audits
-        tl.to(orbitRef.current,
-          { rotate: -90, duration: 18, ease: "power2.inOut" }, T.rot1);
-        tl.to(".icon-keep-straight",
-          { rotation: 90, duration: 18, ease: "power2.inOut" }, T.rot1);
-        tl.to(contentRefs.current[1],
-          { opacity: 0, y: -30, duration: 6, ease: "power2.in" }, T.rot1);
-        tl.to(contentRefs.current[2],
-          { opacity: 1, y: 0, duration: 7, ease: "power3.out" }, T.rot1 + 8);
+        tl.to(
+          orbitRef.current,
+          { rotate: -90, duration: 18, ease: "power2.inOut" },
+          T.rot1
+        );
+        tl.to(
+          ".icon-keep-straight",
+          { rotation: 90, duration: 18, ease: "power2.inOut" },
+          T.rot1
+        );
+        tl.to(
+          contentRefs.current[1],
+          { opacity: 0, y: -30, duration: 6, ease: "power2.in" },
+          T.rot1
+        );
+        tl.to(
+          contentRefs.current[2],
+          { opacity: 1, y: 0, duration: 7, ease: "power2.out" },
+          T.rot1 + 8
+        );
 
         // Phase rot2: -180° → Training
-        tl.to(orbitRef.current,
-          { rotate: -180, duration: 18, ease: "power2.inOut" }, T.rot2);
-        tl.to(".icon-keep-straight",
-          { rotation: 180, duration: 18, ease: "power2.inOut" }, T.rot2);
-        tl.to(contentRefs.current[2],
-          { opacity: 0, y: -30, duration: 6, ease: "power2.in" }, T.rot2);
-        tl.to(contentRefs.current[3],
-          { opacity: 1, y: 0, duration: 7, ease: "power3.out" }, T.rot2 + 8);
+        tl.to(
+          orbitRef.current,
+          { rotate: -180, duration: 18, ease: "power2.inOut" },
+          T.rot2
+        );
+        tl.to(
+          ".icon-keep-straight",
+          { rotation: 180, duration: 18, ease: "power2.inOut" },
+          T.rot2
+        );
+        tl.to(
+          contentRefs.current[2],
+          { opacity: 0, y: -30, duration: 6, ease: "power2.in" },
+          T.rot2
+        );
+        tl.to(
+          contentRefs.current[3],
+          { opacity: 1, y: 0, duration: 7, ease: "power2.out" },
+          T.rot2 + 8
+        );
 
         // Phase rot3: -270° → Search
-        tl.to(orbitRef.current,
-          { rotate: -270, duration: 18, ease: "power2.inOut" }, T.rot3);
-        tl.to(".icon-keep-straight",
-          { rotation: 270, duration: 18, ease: "power2.inOut" }, T.rot3);
-        tl.to(contentRefs.current[3],
-          { opacity: 0, y: -30, duration: 6, ease: "power2.in" }, T.rot3);
-        tl.to(contentRefs.current[4],
-          { opacity: 1, y: 0, duration: 7, ease: "power3.out" }, T.rot3 + 8);
+        tl.to(
+          orbitRef.current,
+          { rotate: -270, duration: 18, ease: "power2.inOut" },
+          T.rot3
+        );
+        tl.to(
+          ".icon-keep-straight",
+          { rotation: 270, duration: 18, ease: "power2.inOut" },
+          T.rot3
+        );
+        tl.to(
+          contentRefs.current[3],
+          { opacity: 0, y: -30, duration: 6, ease: "power2.in" },
+          T.rot3
+        );
+        tl.to(
+          contentRefs.current[4],
+          { opacity: 1, y: 0, duration: 7, ease: "power2.out" },
+          T.rot3 + 8
+        );
 
         tl.to({}, { duration: T.end - (T.rot3 + 18) }, T.rot3 + 18);
-
       }, sectionRef);
 
       return () => ctx.revert();
@@ -186,55 +262,46 @@ gsap.ticker.add(() => {
       className="relative h-screen overflow-hidden"
       style={{ backgroundColor: "#0A0F14" }}
     >
-      <div className="absolute inset-0 z-0" style={{ backgroundColor: "#0A0F14" }} />
+      <div
+        className="absolute inset-0 z-0"
+        style={{ backgroundColor: "#0A0F14" }}
+      />
       <div className="absolute inset-0 z-0 bg-[radial-gradient(ellipse_at_35%_50%,rgba(56,189,248,0.05),transparent_55%)]" />
       <div className="absolute inset-0 z-0 bg-[radial-gradient(ellipse_at_70%_50%,rgba(99,102,241,0.04),transparent_50%)]" />
 
       <div className="relative z-10 mx-auto flex h-full max-w-7xl items-center px-10">
-
         {/* ── LEFT ─────────────────────────────────────────── */}
         <div className="relative flex w-1/2 items-center justify-center">
-
-          {/*
-            Circle geometry:
-              Container:  560 × 560px
-              Centre:     280, 280
-              Outer ring: r = 280  (the container edge)
-              Inner ring: r = 220  (inset 60px each side)
-              Track mid:  r = 250  (midpoint of 60px gap = 30px from outer)
-
-            To place an icon centred on r=250:
-              Use a zero-size anchor div positioned at the radial point,
-              then use transform: translate(-50%, -50%) on the icon wrapper.
-
-            Anchor positions (from container top-left):
-              TOP:    left=280, top=30      (280 - 250 = 30)
-              RIGHT:  left=530, top=280     (280 + 250 = 530)
-              BOTTOM: left=280, top=530
-              LEFT:   left=30,  top=280
-          */}
           <div className="relative h-[560px] w-[560px]">
-
             {/* Rings */}
             <div className="absolute inset-0 rounded-full border border-white/10" />
             <div className="absolute inset-[60px] rounded-full border border-white/[0.06]" />
 
             {/* MULTICOLOUR ARC — static, never rotated */}
-            <div className="arc-gradient-wrapper absolute inset-0" style={{ opacity: 0 }}>
+            <div
+              className="arc-gradient-wrapper absolute inset-0"
+              style={{ opacity: 0 }}
+            >
               <svg
                 className="absolute inset-0 h-full w-full"
                 viewBox="0 0 560 560"
                 fill="none"
-                xmlns="http://www.w3.org/2000/svg"
+                xmlns="[w3.org](http://www.w3.org/2000/svg)"
               >
                 <defs>
-                  <linearGradient id="arcMulti" x1="0%" y1="0%" x2="0%" y2="100%">
-                    <stop offset="0%"   stopColor="#38bdf8" stopOpacity="0" />
-                    <stop offset="18%"  stopColor="#818cf8" stopOpacity="0.85" />
-                    <stop offset="36%"  stopColor="#c084fc" stopOpacity="0.95" />
-                    <stop offset="50%"  stopColor="#ffffff" stopOpacity="1" />
-                    <stop offset="64%"  stopColor="#f472b6" stopOpacity="0.95" />
-                    <stop offset="82%"  stopColor="#fb923c" stopOpacity="0.85" />
+                  <linearGradient
+                    id="arcMulti"
+                    x1="0%"
+                    y1="0%"
+                    x2="0%"
+                    y2="100%"
+                  >
+                    <stop offset="0%" stopColor="#38bdf8" stopOpacity="0" />
+                    <stop offset="18%" stopColor="#818cf8" stopOpacity="0.85" />
+                    <stop offset="36%" stopColor="#c084fc" stopOpacity="0.95" />
+                    <stop offset="50%" stopColor="#ffffff" stopOpacity="1" />
+                    <stop offset="64%" stopColor="#f472b6" stopOpacity="0.95" />
+                    <stop offset="82%" stopColor="#fb923c" stopOpacity="0.85" />
                     <stop offset="100%" stopColor="#38bdf8" stopOpacity="0" />
                   </linearGradient>
                   <filter id="arcGlow">
@@ -247,14 +314,19 @@ gsap.ticker.add(() => {
                 </defs>
                 <path
                   d="M 280 4 A 276 276 0 0 1 280 556"
-                  stroke="url(#arcMulti)" strokeWidth="1.5"
-                  strokeLinecap="round" fill="none"
+                  stroke="url(#arcMulti)"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  fill="none"
                 />
                 <path
                   d="M 280 4 A 276 276 0 0 1 280 556"
-                  stroke="url(#arcMulti)" strokeWidth="14"
-                  strokeLinecap="round" fill="none"
-                  opacity="0.15" filter="url(#arcGlow)"
+                  stroke="url(#arcMulti)"
+                  strokeWidth="14"
+                  strokeLinecap="round"
+                  fill="none"
+                  opacity="0.15"
+                  filter="url(#arcGlow)"
                 />
               </svg>
             </div>
@@ -266,22 +338,13 @@ gsap.ticker.add(() => {
               <div className="absolute right-[-20px] top-1/2 h-[90px] w-[90px] -translate-y-1/2 rounded-full bg-cyan-200/20 blur-[40px]" />
               <div className="active-dot absolute right-[-6px] top-1/2 h-5 w-5 -translate-y-1/2 rounded-full">
                 <div className="absolute inset-0 rounded-full bg-gradient-to-r from-cyan-300 via-white to-cyan-400 blur-[2px]" />
-                
               </div>
             </div>
 
-            {/* ── ORBIT ─────────────────────────────────────────
-                Each icon anchor = zero-size point on the track circle (r=250).
-                The icon-keep-straight wrapper uses translate(-50%,-50%)
-                so the icon visual centre lands exactly on that point.
-            ─────────────────────────────────────────────────── */}
+            {/* ── ORBIT ───────────────────────────────────────── */}
             <div ref={orbitRef} className="orbit-wrapper absolute inset-0">
-
-              {/* TOP  — anchor at (280, 30) */}
-              <div
-                className="absolute"
-                style={{ left: 280, top: 100 }}
-              >
+              {/* TOP — anchor at (280, 30) */}
+              <div className="absolute" style={{ left: 280, top: 100 }}>
                 <div
                   className="icon-keep-straight"
                   style={{ transform: "translate(-50%, -50%)" }}
@@ -291,10 +354,7 @@ gsap.ticker.add(() => {
               </div>
 
               {/* RIGHT — anchor at (530, 280) */}
-              <div
-                className="absolute"
-                style={{ left: 460, top: 280 }}
-              >
+              <div className="absolute" style={{ left: 460, top: 280 }}>
                 <div
                   className="icon-keep-straight"
                   style={{ transform: "translate(-50%, -50%)" }}
@@ -304,10 +364,7 @@ gsap.ticker.add(() => {
               </div>
 
               {/* BOTTOM — anchor at (280, 530) */}
-              <div
-                className="absolute"
-                style={{ left: 280, top: 460 }}
-              >
+              <div className="absolute" style={{ left: 280, top: 460 }}>
                 <div
                   className="icon-keep-straight"
                   style={{ transform: "translate(-50%, -50%)" }}
@@ -317,10 +374,7 @@ gsap.ticker.add(() => {
               </div>
 
               {/* LEFT — anchor at (30, 280) */}
-              <div
-                className="absolute"
-                style={{ left: 100, top: 280 }}
-              >
+              <div className="absolute" style={{ left: 100, top: 280 }}>
                 <div
                   className="icon-keep-straight"
                   style={{ transform: "translate(-50%, -50%)" }}
@@ -328,7 +382,6 @@ gsap.ticker.add(() => {
                   <ServiceIcon service={services[2]} />
                 </div>
               </div>
-
             </div>
 
             {/* CENTER */}
@@ -338,13 +391,14 @@ gsap.ticker.add(() => {
                 style={{ backgroundColor: "rgba(6,13,22,0.92)" }}
               >
                 <Image
-                  src="/Vector.png" alt="Center Logo"
-                  width={72} height={72}
+                  src="/Vector.png"
+                  alt="Center Logo"
+                  width={72}
+                  height={72}
                   className="center-logo"
                 />
               </div>
             </div>
-
           </div>
         </div>
 
@@ -355,9 +409,13 @@ gsap.ticker.add(() => {
               <div
                 key={i}
                 ref={(el) => {
-  contentRefs.current[i] = el;
-}}
-                className="absolute left-0 top-0 w-full"
+                  contentRefs.current[i] = el;
+                }}
+                className="absolute left-0 top-0 w-full will-change-transform"
+                style={{
+                  backfaceVisibility: "hidden",
+                  transform: "translateZ(0)",
+                }}
               >
                 <p className="mb-4 text-xs tracking-[0.35em] text-white/40">
                   {service.subtitle}
