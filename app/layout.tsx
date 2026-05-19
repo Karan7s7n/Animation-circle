@@ -13,8 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Animated App",
-  description: "An app with animated circular services section.",
+  title: "Cirle | Life Sciences Regulatory Partner",
+  description:
+    "Regulatory consulting, audits, training, and search for life sciences organisations.",
 };
 
 export default function RootLayout({
