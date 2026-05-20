@@ -11,14 +11,17 @@ const cards = [
   {
     title: "Pharmaceuticals",
     image: "/pharma.png",
+    nextImage: "/name1.png",
   },
   {
     title: "Medtech",
     image: "/medtech.png",
+    nextImage: "/name2.png",
   },
   {
     title: "Biotechnology",
     image: "/bio.png",
+    nextImage: "/name3.png",
   },
 ];
 
@@ -41,11 +44,19 @@ export default function FrontPage() {
         autoAlpha: 0,
         y: -10,
       });
+
       gsap.set(q("[data-hero-title]"), { autoAlpha: 0, y: 32 });
       gsap.set(q("[data-hero-copy]"), { autoAlpha: 0, y: 18 });
+
       gsap.set(q("[data-hero-content], [data-hero-card]"), {
         force3D: true,
         willChange: "transform, opacity",
+      });
+
+      // second image hidden initially
+      gsap.set(q("[data-next-image]"), {
+        autoAlpha: 0,
+        scale: 1.05,
       });
 
       if (reduceMotion) {
@@ -77,37 +88,75 @@ export default function FrontPage() {
           "-=0.62"
         );
 
-      gsap
-        .timeline({
+      const cards = q("[data-hero-card]");
+
+      cards.forEach((card: Element) => {
+        const currentImage = card.querySelector("[data-current-image]");
+        const nextImage = card.querySelector("[data-next-image]");
+
+        gsap.timeline({
           scrollTrigger: {
             trigger: section,
             start: "top top",
             end: "bottom top",
             scrub: 0.6,
-            invalidateOnRefresh: true,
           },
         })
-        .to(
-          q("[data-hero-content]"),
-          {
-            y: -70,
-            autoAlpha: 0,
-            ease: "none",
-            duration: 1,
-          },
-          0
-        )
-        .to(
-          q("[data-hero-card]"),
-          {
-            y: -40,
-            autoAlpha: 0,
-            stagger: 0.025,
-            ease: "none",
-            duration: 1,
-          },
-          0
-        );
+          // main card fade out
+          .to(
+            card,
+            {
+              y: -40,
+              autoAlpha: 0,
+              ease: "none",
+              duration: 1,
+            },
+            0
+          )
+
+          // current image fades out
+          .to(
+            currentImage,
+            {
+              autoAlpha: 0,
+              scale: 1.08,
+              ease: "none",
+              duration: 0.45,
+            },
+            0
+          )
+
+          // next image fades in while scrolling
+          .to(
+            nextImage,
+            {
+              autoAlpha: 1,
+              scale: 1,
+              ease: "none",
+              duration: 0.45,
+            },
+            0.1
+          );
+      });
+
+      gsap.timeline({
+        scrollTrigger: {
+          trigger: section,
+          start: "top top",
+          end: "bottom top",
+          scrub: 0.6,
+          invalidateOnRefresh: true,
+        },
+      }).to(
+        q("[data-hero-content]"),
+        {
+          y: -70,
+          autoAlpha: 0,
+          ease: "none",
+          duration: 1,
+        },
+        0
+      );
     }, section);
 
     return () => ctx.revert();
@@ -120,6 +169,7 @@ export default function FrontPage() {
       aria-label="Life sciences regulatory consulting"
     >
       <div className="absolute inset-0 bg-[#0A0F14]" />
+
       <div className="absolute inset-x-0 top-0 h-[56vh] bg-[radial-gradient(circle_at_50%_24%,rgba(40,76,120,0.12),transparent_34%),linear-gradient(180deg,rgba(10,15,20,0.22),rgba(10,15,20,0.96)_88%)]" />
 
       <header className="absolute left-0 top-0 z-40 flex w-full items-start justify-between px-7 py-7 sm:px-10 sm:py-8">
@@ -172,9 +222,28 @@ export default function FrontPage() {
             key={card.title}
             className="relative min-h-0 overflow-hidden border-t border-white/[0.03] will-change-transform sm:border-l sm:border-t-0 sm:first:border-l-0"
           >
-            <div data-hero-image className="absolute inset-0">
+            {/* ORIGINAL IMAGE */}
+            <div
+              data-current-image
+              className="absolute inset-0"
+            >
               <Image
                 src={card.image}
+                alt=""
+                fill
+                priority
+                sizes="(min-width: 640px) 33vw, 100vw"
+                className="object-cover"
+              />
+            </div>
+
+            {/* NEW IMAGE */}
+            <div
+              data-next-image
+              className="absolute inset-0"
+            >
+              <Image
+                src={card.nextImage}
                 alt=""
                 fill
                 priority
@@ -197,7 +266,6 @@ export default function FrontPage() {
           </article>
         ))}
       </div>
-
     </section>
   );
 }
