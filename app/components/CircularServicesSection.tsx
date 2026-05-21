@@ -700,7 +700,7 @@ ScrollTrigger.create({
       <div className="w-[2px] h-[70%] bg-gradient-to-b from-transparent via-white/20 to-transparent" />
 
       {/* RIGHT */}
-      <div className="relative w-[520px] h-[700px] flex items-center">
+      <div className="relative w-[380px] h-[700px] flex items-center">
         <div className="relative w-full h-full">
           {[introContent, ...services].map((service, i) => (
             <div
@@ -735,7 +735,7 @@ ScrollTrigger.create({
             {item.title}
           </p>
 
-          <p className="mt-1 text-[14px] leading-6 text-white/50">
+          <p className="mt-1 text-[16px] leading-6 text-white/50">
             {item.desc}
           </p>
         </div>
