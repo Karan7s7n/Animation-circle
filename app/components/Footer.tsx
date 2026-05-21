@@ -29,7 +29,7 @@ const legalLinks = [
 export default function Footer() {
   return (
     <footer
-      className="relative overflow-hidden border-t border-white/5 bg-[#0A0F14]"
+      className="relative overflow-hidden border-t border-white/5 bg-[rgb(14,19,26)]"
       style={{
         fontFamily: '"Test Söhne", sans-serif',
       }}

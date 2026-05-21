@@ -494,11 +494,11 @@ export default function CircularServicesSection() {
       id="services"
       ref={sectionRef}
       className="relative h-screen overflow-hidden"
-      style={{ backgroundColor: "#0A0F14" }}
+      style={{ backgroundColor: "rgb(14,19,26)" }}
     >
       <div
         className="absolute inset-0 z-0"
-        style={{ backgroundColor: "#0A0F14" }}
+        style={{ backgroundColor: "rgb(14,19,26)" }}
       />
 
       <div className="absolute inset-0 z-0 bg-[radial-gradient(ellipse_at_35%_50%,rgba(56,189,248,0.05),transparent_55%)]" />

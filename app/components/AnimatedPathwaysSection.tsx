@@ -151,11 +151,11 @@ export default function AnimatedPathwaysSection() {
   return (
     <section
       ref={sectionRef}
-      className="relative h-screen overflow-hidden bg-[#0A0F14] text-white"
+      className="relative h-screen overflow-hidden bg-[rgb(14,19,26)] text-white"
       aria-label="Service pathways"
     >
       {/* BACKGROUND */}
-      <div className="absolute inset-0 bg-[#0A0F14]" />
+      <div className="absolute inset-0 bg-[rgb(14,19,26)]" />
 
       {/* RADIAL GLOW */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_76%_55%,rgba(56,189,248,0.07),transparent_45%)]" />

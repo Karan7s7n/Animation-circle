@@ -10,85 +10,71 @@ gsap.registerPlugin(ScrollTrigger);
 export default function CoordinatedSystemSection() {
   const sectionRef = useRef<HTMLDivElement>(null);
 
-  const text =
-    "Not separate services, but one coordinated system. Aligning regulatory expertise, audit delivery and specialist talent.";
-
-  const words = text.split(" ");
-
+  
   useEffect(() => {
-    if (!sectionRef.current) return;
+  if (!sectionRef.current) return;
 
-    const ctx = gsap.context(() => {
-      // WORDS
-      gsap.set(".reveal-word", {
-        color: "rgba(255,255,255,0.14)",
-      });
+  const ctx = gsap.context(() => {
+    // INIT STATE
+    gsap.set(".reveal-word", {
+      color: "rgba(255,255,255,0.14)",
+    });
 
-      gsap.to(".reveal-word", {
-        color: "rgba(255,255,255,1)",
-        stagger: 0.08,
-        ease: "none",
+    // TEXT ANIMATION
+    gsap.to(".reveal-word", {
+      color: "rgba(255,255,255,1)",
+      stagger: 0.25,
+      ease: "none",
+      scrollTrigger: {
+        trigger: sectionRef.current,
+        start: "top 80%",
+        end: "bottom 30%",
+        scrub: 1,
+        invalidateOnRefresh: true,
+      },
+    });
+
+    // BUTTON
+    gsap.fromTo(
+      ".about-btn",
+      {
+        opacity: 0,
+        y: 20,
+      },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 1,
+        ease: "power3.out",
         scrollTrigger: {
           trigger: sectionRef.current,
-          start: "top 70%",
-          end: "top 20%",
-          scrub: 1,
+          start: "top 60%",
+          toggleActions: "play none none reverse",
         },
-      });
+      }
+    );
 
-      // BUTTON
-      gsap.fromTo(
-        ".about-btn",
-        {
-          opacity: 0,
-          y: 20,
-        },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 1,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top 55%",
-            toggleActions: "play none none reverse",
-          },
-        }
-      );
-    }, sectionRef);
+    // 🔥 IMPORTANT FIX
+    ScrollTrigger.refresh();
+  }, sectionRef);
 
-    return () => ctx.revert();
-  }, []);
+  return () => ctx.revert();
+}, []);
 
   return (
     <section
       ref={sectionRef}
-      className="relative overflow-hidden bg-[#0A0F14] py-32 text-white"
+      className="relative overflow-hidden bg-[rgb(14,19,26)] py-32 text-white"
     >
       <div className="mx-auto max-w-6xl px-8 lg:px-0">
         {/* TEXT */}
-        <h2
-          className="
-            max-w-5xl
-            text-[48px]
-            font-light
-            leading-[1.22]
-            tracking-[-0.045em]
-          "
-        >
-          {words.map((word, index) => (
-            <span
-              key={index}
-              className="reveal-word inline-block"
-              style={{
-                marginRight: "0.28em",
-                color: "rgba(255,255,255,0.14)",
-              }}
-            >
-              {word}
-            </span>
-          ))}
-        </h2>
+        <h2 className="max-w-5xl text-[48px] font-light leading-[1.22] tracking-[-0.045em]">
+          <span className="reveal-word">Not separate services, but one coordinated</span>
+          <br />
+          <span className="reveal-word">system. Aligning regulatory expertise, audit</span>
+          <br />
+          <span className="reveal-word">delivery and specialist talent.</span>
+        </h2> 
 
         {/* BUTTON */}
         <a
@@ -102,22 +88,15 @@ export default function CoordinatedSystemSection() {
             items-center
             justify-center
             gap-2
-            rounded-full
-            border
-            border-white/12
-            bg-white/[0.03]
             text-base
             font-medium
             text-white
             backdrop-blur-xl
             transition-all
             duration-300
-            hover:border-white/30
-            hover:bg-white/[0.06]
           "
         >
           <span>About Us</span>
-
           <FiArrowRight className="text-[18px]" />
         </a>
       </div>

@@ -186,10 +186,10 @@ cards.forEach((card: Element) => {
   return (
     <section
       ref={sectionRef}
-      className="relative h-[100svh] min-h-[640px] overflow-hidden bg-[#0A0F14] text-white"
+      className="relative h-[100svh] min-h-[640px] overflow-hidden bg-[rgb(14,19,26)] text-white"
       aria-label="Life sciences regulatory consulting"
     >
-      <div className="absolute inset-0 bg-[#0A0F14]" />
+      <div className="absolute inset-0 bg-[rgb(14,19,26)]" />
 
       <div className="absolute inset-x-0 top-0 h-[56vh] bg-[radial-gradient(circle_at_50%_24%,rgba(40,76,120,0.12),transparent_34%),linear-gradient(180deg,rgba(10,15,20,0.22),rgba(10,15,20,0.96)_88%)]" />
 
@@ -220,7 +220,7 @@ cards.forEach((card: Element) => {
       >
         <h1
           data-hero-title
-          className="max-w-4xl text-balance text-[clamp(2.75rem,5.15vw,4.6rem)] font-normal leading-[0.95] tracking-[-0.045em] text-white"
+          className="max-w-4xl text-balance text-[56px] font-normal leading-[0.95] tracking-[-0.045em] text-white"
         >
           Regulatory Confidence.
           <br />
@@ -229,10 +229,9 @@ cards.forEach((card: Element) => {
 
         <p
           data-hero-copy
-          className="mt-6 max-w-xl text-pretty text-[13px] leading-5 text-white/35 sm:text-sm"
+          className="mt-6 max-w-xl text-[22px] leading-5 text-white/35 sm:text-sm"
         >
-          We help life sciences organisations move faster through regulation,
-          reduce risk, and build the teams that deliver.
+          We help life sciences organisations move faster through <br></br>regulation, reduce risk, and build the teams that deliver.
         </p>
       </div>
 
