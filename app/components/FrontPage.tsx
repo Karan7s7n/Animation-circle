@@ -27,6 +27,23 @@ const cards = [
 
 export default function FrontPage() {
   const sectionRef = useRef<HTMLElement>(null);
+  useEffect(() => {
+    if ("scrollRestoration" in history) {
+      history.scrollRestoration = "manual";
+    }
+
+    const timeout = setTimeout(() => {
+      ScrollTrigger.refresh(true);
+    }, 100);
+
+    return () => clearTimeout(timeout);
+  }, []);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    ScrollTrigger.clearScrollMemory();
+  }, []);
+  
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -191,8 +208,7 @@ cards.forEach((card: Element) => {
     >
       <div className="absolute inset-0 bg-[rgb(14,19,26)]" />
 
-      <div className="absolute inset-x-0 top-0 h-[56vh] bg-[radial-gradient(circle_at_50%_24%,rgba(40,76,120,0.12),transparent_34%),linear-gradient(180deg,rgba(10,15,20,0.22),rgba(10,15,20,0.96)_88%)]" />
-
+      <div className="absolute inset-x-0 top-0 h-[56vh] bg-[radial-gradient(circle_at_50%_20%,rgba(40,76,120,0.10),transparent_60%),linear-gradient(to_bottom,rgba(14,19,26,0.25),rgba(14,19,26,0.98))]" />
       <header className="absolute left-0 top-0 z-40 flex w-full items-start justify-between px-7 py-7 sm:px-10 sm:py-8">
         <div data-hero-logo className="relative h-9 w-9 sm:h-10 sm:w-10">
           <Image

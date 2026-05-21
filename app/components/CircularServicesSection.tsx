@@ -15,7 +15,6 @@ const introContent = {
 };
 
 
-
 const services = [
   {
     title: "Inspection-Ready Audit Systems",
@@ -118,9 +117,15 @@ export default function CircularServicesSection() {
   const orbitRef = useRef<HTMLDivElement>(null);
 
   const [logoSrc, setLogoSrc] = useState("/logo1.png");
+  const logoRef = useRef("/logo1.png");
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [phase, setPhase] = useState<"intro" | "orbit">("intro");
 
   const contentRefs = useRef<(HTMLDivElement | null)[]>([]);
   const centerLogoRef = useRef<HTMLImageElement | null>(null);
+
+  const isIntro = phase === "intro";
+  
   
 
   useEffect(() => {
@@ -170,7 +175,6 @@ export default function CircularServicesSection() {
       force3D: true,
     });
 
-    setLogoSrc("/logo1.png");
 
     // =========================
     // AMBIENT GLOW
@@ -222,36 +226,110 @@ export default function CircularServicesSection() {
     });
 
     // =========================
-    // MAIN TIMELINE
+// MAIN TIMELINE (STABLE VERSION)
+// =========================
+
+// IMPORTANT: ensure clean state before timeline starts
+ScrollTrigger.refresh();
+
+const tl = gsap.timeline({
+  defaults: {
+    ease: "power2.inOut",
+  },
+
+  scrollTrigger: {
+    trigger: section,
+    start: "top top",
+    end: "+=6000",
+    scrub: 1.2,
+    pin: true,
+    anticipatePin: 1,
+    invalidateOnRefresh: true,
+    fastScrollEnd: true,
+    pinSpacing: true,
+
     // =========================
-    const tl = gsap.timeline({
-      defaults: {
-        ease: "power2.inOut",
+    // SMOOTHER SNAP (FIXED)
+    // =========================
+    snap: {
+      snapTo: (value) => {
+        const snaps = [0, 0.1, 0.2, 0.45, 0.7, 0.95, 1];
+        return snaps.reduce((prev, curr) =>
+          Math.abs(curr - value) < Math.abs(prev - value) ? curr : prev
+        );
       },
-      scrollTrigger: {
-        trigger: section,
-        start: "top top",
-        end: "+=6000",
-        scrub: 1.2,
-        pin: true,
-        anticipatePin: 1,
-        invalidateOnRefresh: true,
-        fastScrollEnd: true,
+      duration: { min: 0.25, max: 0.6 },
+      ease: "power2.out",
+      directional: true,
+    },
 
-        snap: {
-          snapTo: [0, 0.1, 0.2, 0.45, 0.7, 0.95, 1],
-          duration: { min: 0.25, max: 0.55 },
-          ease: "power2.out",
-          directional: true,
-        },
+    // =========================
+    // CLEAN REFRESH HANDLING
+    // =========================
+    onRefresh: (self) => {
+      // prevents transform drift after refresh
+      gsap.set(section, {
+        clearProps: "transform",
+      });
 
-        onRefresh: () => {
-          gsap.set(section, {
-            clearProps: "transform",
-          });
-        },
-      },
-    });
+      // ensures correct recalculation after layout shift
+      
+    },
+
+    onRefreshInit: (self) => {
+      // force correct initial measurement
+      self.update();
+    },
+  },
+});
+
+
+ScrollTrigger.create({
+  trigger: section,
+  start: "top top",
+  end: "+=6000",
+
+  onUpdate: (self) => {
+    const shouldBeLogo2 = self.progress >= T.orbitIn / 100;
+
+    setLogoSrc(shouldBeLogo2 ? "/logo2.png" : "/logo1.png");
+  },
+});
+
+ScrollTrigger.create({
+  trigger: sectionRef.current,
+  start: "top top",
+  end: "+=6000",
+  scrub: true,
+  onUpdate: (self) => {
+    const progress = self.progress;
+
+    // 4 services → divide into 4 ranges
+    const index = Math.min(
+      services.length - 1,
+      Math.floor(progress * services.length)
+    );
+
+    setActiveIndex(index);
+  },
+});
+
+ScrollTrigger.create({
+  trigger: sectionRef.current,
+  start: "top top",
+  end: "+=6000",
+  scrub: true,
+
+  onUpdate: (self) => {
+    const p = self.progress;
+
+    if (p < 0.18) {
+      setPhase("intro");
+    } else {
+      setPhase("orbit");
+    }
+  },
+});
 
     // =========================
     // INTRO OUT
@@ -266,48 +344,7 @@ export default function CircularServicesSection() {
       T.introOut
     );
 
-    // =========================
-    // LOGO SWITCH
-    // =========================
-    tl.to(
-      centerLogoRef.current,
-      {
-        opacity: 0,
-        scale: 0.8,
-        duration: 2,
-      },
-      T.orbitIn - 1
-    );
-
-    tl.to(
-  {},
-  {
-    duration: 0,
-    onStart: () => setLogoSrc("/logo2.png"),
-  },
-  T.orbitIn
-);
-
-    tl.to(
-      centerLogoRef.current,
-      {
-        opacity: 1,
-        scale: 1,
-        duration: 2.5,
-        ease: "power3.out",
-      },
-      T.orbitIn + 0.5
-    );
-
-    tl.call(
-  () => {
-    requestAnimationFrame(() => {
-      setLogoSrc("/logo2.png");
-    });
-  },
-  [],
-  T.orbitIn
-);
+    //
 
     // =========================
     // ORBIT INTRO
@@ -493,7 +530,7 @@ export default function CircularServicesSection() {
     <section
       id="services"
       ref={sectionRef}
-      className="relative h-screen overflow-hidden"
+      className="relative min-h-screen w-full overflow-hidden flex items-center justify-center"
       style={{ backgroundColor: "rgb(14,19,26)" }}
     >
       <div
@@ -505,10 +542,10 @@ export default function CircularServicesSection() {
 
       <div className="absolute inset-0 z-0 bg-[radial-gradient(ellipse_at_70%_50%,rgba(99,102,241,0.04),transparent_50%)]" />
 
-      <div className="relative z-10 mx-auto flex h-full max-w-7xl items-center px-10">
+      <div className="relative z-10 mx-auto flex h-full max-w-6xl items-center justify-between px-3 lg:px-10">
         {/* LEFT */}
-        <div className="relative flex w-[629px] items-center justify-center">
-          <div className="relative h-[600px] w-[629px]">
+<div className="relative flex w-[600px] items-center justify-start -ml-60">
+  <div className="relative h-[600px] w-[600px] overflow-visible">
             {/* RINGS */}
             <div className="absolute inset-0 rounded-full border border-white/30" />
 
@@ -519,10 +556,11 @@ export default function CircularServicesSection() {
               style={{ opacity: 0 }}
             >
               <svg
-                className="absolute inset-0 h-full w-full"
-                viewBox="0 0 629 600"
-                fill="none"
-              >
+  className="absolute inset-0 h-full w-full"
+  viewBox="0 0 600 600"
+  preserveAspectRatio="xMidYMid meet"
+  fill="none"
+>
                 <defs>
                   <linearGradient
                     id="arcMulti"
@@ -577,17 +615,17 @@ export default function CircularServicesSection() {
                 </defs>
 
                 <path
-  d="M 314.5 2 A 312.5 298 0 0 1 314.5 598"
+  d="M 300 0 A 300 300 0 0 1 300 600"
   stroke="url(#arcMulti)"
-  strokeWidth="1.5"
+  strokeWidth="2.5"
   strokeLinecap="round"
   fill="none"
 />
 
 <path
-  d="M 314.5 2 A 312.5 298 0 0 1 314.5 598"
+  d="M 300 0 A 300 300 0 0 1 300 600"
   stroke="url(#arcMulti)"
-  strokeWidth="14"
+  strokeWidth="12"
   strokeLinecap="round"
   fill="none"
   opacity="0.15"
@@ -622,12 +660,15 @@ export default function CircularServicesSection() {
   "
 >
   {/* TOP */}
-  <div className="absolute" style={{ left: 314, top: 110 }}>
+  <div className="absolute" style={{ left: 300, top: 100 }}>
     <div
       className="icon-keep-straight"
       style={{ transform: "translate(-50%, -50%)" }}
     >
-      <ServiceIcon service={services[1]} />
+      <ServiceIcon
+  active={isIntro ? true : activeIndex === 1}
+  service={services[1]}
+/>
     </div>
   </div>
 
@@ -637,27 +678,46 @@ export default function CircularServicesSection() {
       className="icon-keep-straight"
       style={{ transform: "translate(-50%, -50%)" }}
     >
-      <ServiceIcon active service={services[0]} />
+      
+
+
+{/* RIGHT */}
+<ServiceIcon
+  active={isIntro ? true : activeIndex === 0}
+  service={services[0]}
+/>
+
+{/* BOTTOM */}
+
+
+{/* LEFT */}
+
     </div>
   </div>
 
   {/* BOTTOM */}
-  <div className="absolute" style={{ left: 314, top: 490 }}>
+  <div className="absolute" style={{ left: 300, top: 500 }}>
     <div
       className="icon-keep-straight"
       style={{ transform: "translate(-50%, -50%)" }}
     >
-      <ServiceIcon service={services[3]} />
+      <ServiceIcon
+  active={isIntro ? true : activeIndex === 3}
+  service={services[3]}
+/>
     </div>
   </div>
 
   {/* LEFT */}
-  <div className="absolute" style={{ left: 108, top: 300 }}>
+  <div className="absolute" style={{ left: 100, top: 300 }}>
     <div
       className="icon-keep-straight"
       style={{ transform: "translate(-50%, -50%)" }}
     >
-      <ServiceIcon service={services[2]} />
+      <ServiceIcon
+  active={isIntro ? true : activeIndex === 2}
+  service={services[2]}
+/>
     </div>
   </div>
 </div>
@@ -665,30 +725,48 @@ export default function CircularServicesSection() {
             {/* CENTER */}
             <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
               <div
-                className="
-  center-core
-  relative
-  flex
-  h-44
-  w-44
-  items-center
-  justify-center
-  rounded-full
-  border
-  border-white/80
-  backdrop-blur-xl
-  shadow-[0_0_0_1px_rgba(255,255,255,0.08),0_0_40px_rgba(255,255,255,0.08)]
-"style={{ backgroundColor: "rgba(6,13,22,0.92)" }}
-              >
-                <div ref={centerLogoRef}>
-   <Image
-        src={logoSrc}
-        alt="Center Logo"
-        width={72}
-        height={72}
-        className="center-logo object-contain h-auto w-auto"
-      />
+  className="
+    center-core
+    relative
+    flex
+    h-[250px] w-[250px]
+    items-center
+    justify-center
+    rounded-full
+    border border-white/70
+    backdrop-blur-2xl
+    shadow-[0_0_0_1px_rgba(255,255,255,0.06),0_0_60px_rgba(56,189,248,0.12)]
+  "
+  style={{ backgroundColor: "#0A0f14" }}
+>
+                <div ref={centerLogoRef} className="flex items-center justify-center">
+  <div className="relative h-[260px] w-[260px] flex items-center justify-center">
+
+    <Image
+      src="/logo1.png"
+      alt="Logo 1"
+      width={170}
+      height={170}
+      className="absolute object-contain transition-opacity duration-700"
+      style={{
+        opacity: logoSrc === "/logo1.png" ? 1 : 0,
+      }}
+    />
+
+    <Image
+      src="/logo2.png"
+      alt="Logo 2"
+      width={120}
+      height={120}
+      className="absolute object-contain transition-opacity duration-700"
+      style={{
+        opacity: logoSrc === "/logo2.png" ? 1 : 0,
+      }}
+    />
+
+  </div>
 </div>
+
               </div>
             </div>
           </div>
@@ -698,7 +776,7 @@ export default function CircularServicesSection() {
         <div
   className="
     absolute
-    left-[833px]
+    left-[550px]
     top-[158px]
     h-[72%]
     w-[2px]
@@ -710,7 +788,7 @@ export default function CircularServicesSection() {
 />
 
         {/* RIGHT */}
-<div className="relative ml-[250px] flex h-[600px] w-[403px] items-center">
+<div className="relative ml-[350px] flex h-[778px] w-[500px] items-center">
   <div className="relative h-full w-full">
     {[introContent, ...services].map((service, i) => (
       <div
@@ -765,6 +843,7 @@ export default function CircularServicesSection() {
   );
 }
 
+
 function ServiceIcon({
   service,
   active = false,
@@ -773,24 +852,28 @@ function ServiceIcon({
   active?: boolean;
 }) {
   return (
-    <div className="flex flex-col items-center gap-2">
+    <div className="flex flex-col items-center gap-2 transition-all duration-300">
       <div
-        className={`flex h-[55px] w-[55px] items-center justify-center ${
+        className={`flex h-[55px] w-[55px] items-center justify-center transition-all duration-300 ${
           active
-            ? "opacity-100"
-            : "opacity-100"
+            ? "opacity-100 scale-110"
+            : "opacity-40 scale-90"
         }`}
       >
         <Image
-    src={service.image}
-    alt={service.iconTitle ?? service.title}
-    width={55}
-    height={55}
-    className="object-contain"
-  />
+          src={service.image}
+          alt={service.iconTitle ?? service.title}
+          width={55}
+          height={55}
+          className="object-contain"
+        />
       </div>
 
-      <p className="text-[9px] tracking-[0.25em] text-white/50">
+      <p
+        className={`text-[9px] tracking-[0.25em] transition-all duration-300 ${
+          active ? "text-white/90" : "text-white/40"
+        }`}
+      >
         {(service.iconTitle ?? service.title).toUpperCase()}
       </p>
     </div>

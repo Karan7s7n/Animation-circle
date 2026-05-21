@@ -37,7 +37,7 @@ export default function Footer() {
       {/* BG GLOW */}
       <div className="absolute left-1/2 top-0 h-[400px] w-[400px] -translate-x-1/2 rounded-full bg-cyan-400/[0.03] blur-[140px]" />
 
-      <div className="relative z-10 mx-auto max-w-7xl px-10 py-20">
+      <div className="relative z-10 w-full px-10 py-20">
         <div className="grid grid-cols-1 gap-16 md:grid-cols-[1.5fr_1fr_1fr_1fr_1fr]">
           {/* LEFT */}
           <div className="flex flex-col justify-between">

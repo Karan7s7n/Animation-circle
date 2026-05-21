@@ -127,14 +127,14 @@ export default function CarouselSection() {
     <section className="relative overflow-hidden bg-[rgb(14,19,26)] py-32">
       <div className="absolute left-1/2 top-1/2 h-[900px] w-[900px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-cyan-400/[0.04] blur-[220px]" />
 
-      <div className="relative z-20 mx-auto max-w-[1540px]">
+      <div className="relative z-20 w-full">
         {/* HEADER */}
         <motion.div
           initial={{ opacity: 0, y: -60 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
           viewport={{ once: true }}
-          className="mb-24 flex items-start justify-between px-10"
+          className="mb-24 flex items-start justify-between px-10 lg:px-20"
         >
           <h2 className="text-[48px] font-light leading-[0.98] tracking-[-0.07em] text-white">
             Proven Outcomes in
@@ -162,7 +162,7 @@ export default function CarouselSection() {
         </motion.div>
 
         {/* CAROUSEL */}
-        <div className="overflow-hidden px-[200px]">
+        <div className="relative w-full overflow-hidden">
           <div
             className={`flex items-stretch ${
               transitionEnabled
@@ -177,7 +177,7 @@ export default function CarouselSection() {
             }}
           >
             {duplicatedStudies.map((item, index) => {
-              const centerIndex = currentIndex ;
+              const centerIndex = currentIndex + 1;
               const distance = Math.abs(index - centerIndex);
               const isCenter = distance === 0;
 

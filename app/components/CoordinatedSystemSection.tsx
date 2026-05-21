@@ -1,104 +1,85 @@
 "use client";
 
-import { FiArrowRight } from "react-icons/fi";
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { FiArrowRight } from "react-icons/fi";
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function CoordinatedSystemSection() {
   const sectionRef = useRef<HTMLDivElement>(null);
 
-  
+  const text =
+    "Not separate services, but one coordinated system. Aligning regulatory expertise, audit delivery and specialist talent.";
+
   useEffect(() => {
-  if (!sectionRef.current) return;
+    if (!sectionRef.current) return;
 
-  const ctx = gsap.context(() => {
-    // INIT STATE
-    gsap.set(".reveal-word", {
-      color: "rgba(255,255,255,0.14)",
-    });
+    const chars = sectionRef.current.querySelectorAll(".char");
 
-    // TEXT ANIMATION
-    gsap.to(".reveal-word", {
-      color: "rgba(255,255,255,1)",
-      stagger: 0.25,
-      ease: "none",
-      scrollTrigger: {
-        trigger: sectionRef.current,
-        start: "top 80%",
-        end: "bottom 30%",
-        scrub: 1,
-        invalidateOnRefresh: true,
-      },
-    });
+    const ctx = gsap.context(() => {
+      // initial state (grey)
+      gsap.set(chars, {
+        color: "rgba(255,255,255,0.18)",
+      });
 
-    // BUTTON
-    gsap.fromTo(
-      ".about-btn",
-      {
+      // cursor blink
+      gsap.to(".cursor", {
         opacity: 0,
-        y: 20,
-      },
-      {
-        opacity: 1,
-        y: 0,
-        duration: 1,
-        ease: "power3.out",
+        repeat: -1,
+        yoyo: true,
+        duration: 0.5,
+        ease: "none",
+      });
+
+      // scroll reveal per character
+      gsap.to(chars, {
+        color: "#ffffff",
+        stagger: 0.02,
+        ease: "none",
         scrollTrigger: {
           trigger: sectionRef.current,
-          start: "top 60%",
-          toggleActions: "play none none reverse",
+          start: "top 75%",
+          end: "top 20%",
+          scrub: true,
         },
-      }
-    );
+      });
+    }, sectionRef);
 
-    // 🔥 IMPORTANT FIX
-    ScrollTrigger.refresh();
-  }, sectionRef);
-
-  return () => ctx.revert();
-}, []);
+    return () => ctx.revert();
+  }, []);
 
   return (
     <section
       ref={sectionRef}
-      className="relative overflow-hidden bg-[rgb(14,19,26)] py-32 text-white"
+      className="relative bg-[rgb(14,19,26)] py-32 text-white"
     >
       <div className="mx-auto max-w-6xl px-8 lg:px-0">
+
         {/* TEXT */}
-        <h2 className="max-w-5xl text-[48px] font-light leading-[1.22] tracking-[-0.045em]">
-          <span className="reveal-word">Not separate services, but one coordinated</span>
-          <br />
-          <span className="reveal-word">system. Aligning regulatory expertise, audit</span>
-          <br />
-          <span className="reveal-word">delivery and specialist talent.</span>
-        </h2> 
+        <h2 className="text-[48px] font-light leading-[1.25] tracking-[-0.03em]">
+          {text.split(" ").map((word, wi) => (
+            <span key={wi} className="inline-block mr-[10px]">
+              {word.split("").map((char, ci) => (
+                <span key={ci} className="char inline-block">
+                  {char}
+                </span>
+              ))}
+            </span>
+          ))}
+        </h2>
+
 
         {/* BUTTON */}
         <a
           href="/about"
-          className="
-            about-btn
-            mt-14
-            inline-flex
-            h-[62px]
-            w-[162px]
-            items-center
-            justify-center
-            gap-2
-            text-base
-            font-medium
-            text-white
-            backdrop-blur-xl
-            transition-all
-            duration-300
-          "
+          className="mt-14 inline-flex items-center gap-2 text-[20px] font-medium text-white hover:text-white/70"
         >
-          <span>About Us</span>
+          About Us
           <FiArrowRight className="text-[18px]" />
         </a>
+
       </div>
     </section>
   );
