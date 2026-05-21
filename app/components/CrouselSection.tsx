@@ -17,7 +17,7 @@ const caseStudies: CaseStudy[] = [
     id: "1",
     category: "CASE STUDY",
     title: "Why audit readiness is becoming a competitive advantage",
-    image: "/pharma.png",
+    image: "/pharma1.png",
   },
   {
     id: "2",
