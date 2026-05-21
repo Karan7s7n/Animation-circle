@@ -74,14 +74,23 @@ export default function CarouselSection() {
             Proven Outcomes in <br /> Regulated Environments
           </h2>
 
-          <div className="hidden md:flex gap-4">
-            <button onClick={handlePrev} className="h-12 w-12 rounded-full border border-white/20 bg-white/5 text-white">
-              <ChevronLeft />
-            </button>
-            <button onClick={handleNext} className="h-12 w-12 rounded-full border border-white/20 bg-white/5 text-white">
-              <ChevronRight />
-            </button>
-          </div>
+          <div className="hidden md:flex items-center gap-4">
+  <button
+    onClick={handlePrev}
+    aria-label="Previous slide"
+    className="group flex h-12 w-12 items-center justify-center rounded-full border border-white/20 bg-white/5 text-white transition-all duration-300 hover:border-white/40 hover:bg-white/10 active:scale-95"
+  >
+    <ChevronLeft className="h-5 w-5 transition-transform group-hover:-translate-x-0.5" />
+  </button>
+
+  <button
+    onClick={handleNext}
+    aria-label="Next slide"
+    className="group flex h-12 w-12 items-center justify-center rounded-full border border-white/20 bg-white/5 text-white transition-all duration-300 hover:border-white/40 hover:bg-white/10 active:scale-95"
+  >
+    <ChevronRight className="h-5 w-5 transition-transform group-hover:translate-x-0.5" />
+  </button>
+</div>
         </motion.div>
 
         {/* CAROUSEL */}
