@@ -170,6 +170,8 @@ export default function CircularServicesSection() {
       force3D: true,
     });
 
+    setLogoSrc("/logo1.png");
+
     // =========================
     // AMBIENT GLOW
     // =========================
@@ -277,13 +279,14 @@ export default function CircularServicesSection() {
       T.orbitIn - 1
     );
 
-    tl.call(
-      () => {
-        setLogoSrc("/logo2.png");
-      },
-      [],
-      T.orbitIn + 0.15
-    );
+    tl.to(
+  {},
+  {
+    duration: 0,
+    onStart: () => setLogoSrc("/logo2.png"),
+  },
+  T.orbitIn
+);
 
     tl.to(
       centerLogoRef.current,
@@ -295,6 +298,16 @@ export default function CircularServicesSection() {
       },
       T.orbitIn + 0.5
     );
+
+    tl.call(
+  () => {
+    requestAnimationFrame(() => {
+      setLogoSrc("/logo2.png");
+    });
+  },
+  [],
+  T.orbitIn
+);
 
     // =========================
     // ORBIT INTRO
@@ -494,10 +507,10 @@ export default function CircularServicesSection() {
 
       <div className="relative z-10 mx-auto flex h-full max-w-7xl items-center px-10">
         {/* LEFT */}
-        <div className="relative flex w-1/2 items-center justify-center">
-          <div className="relative h-[560px] w-[560px]">
+        <div className="relative flex w-[629px] items-center justify-center">
+          <div className="relative h-[600px] w-[629px]">
             {/* RINGS */}
-            <div className="absolute inset-0 rounded-full border border-white/10" />
+            <div className="absolute inset-0 rounded-full border border-white/30" />
 
 
             {/* ARC */}
@@ -507,7 +520,7 @@ export default function CircularServicesSection() {
             >
               <svg
                 className="absolute inset-0 h-full w-full"
-                viewBox="0 0 560 560"
+                viewBox="0 0 629 600"
                 fill="none"
               >
                 <defs>
@@ -564,22 +577,22 @@ export default function CircularServicesSection() {
                 </defs>
 
                 <path
-                  d="M 280 4 A 276 276 0 0 1 280 556"
-                  stroke="url(#arcMulti)"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  fill="none"
-                />
+  d="M 314.5 2 A 312.5 298 0 0 1 314.5 598"
+  stroke="url(#arcMulti)"
+  strokeWidth="1.5"
+  strokeLinecap="round"
+  fill="none"
+/>
 
-                <path
-                  d="M 280 4 A 276 276 0 0 1 280 556"
-                  stroke="url(#arcMulti)"
-                  strokeWidth="14"
-                  strokeLinecap="round"
-                  fill="none"
-                  opacity="0.15"
-                  filter="url(#arcGlow)"
-                />
+<path
+  d="M 314.5 2 A 312.5 298 0 0 1 314.5 598"
+  stroke="url(#arcMulti)"
+  strokeWidth="14"
+  strokeLinecap="round"
+  fill="none"
+  opacity="0.15"
+  filter="url(#arcGlow)"
+/>
               </svg>
             </div>
 
@@ -596,10 +609,20 @@ export default function CircularServicesSection() {
               </div>
             </div>
 
-            {/* ORBIT */}
-            <div ref={orbitRef} className="orbit-wrapper absolute inset-0">
+            <div
+  ref={orbitRef}
+  className="
+    orbit-wrapper
+    absolute
+    inset-0
+    opacity-100
+    brightness-125
+    contrast-125
+    drop-shadow-[0_0_40px_rgba(56,189,248,0.28)]
+  "
+>
   {/* TOP */}
-  <div className="absolute" style={{ left: 280, top: 100 }}>
+  <div className="absolute" style={{ left: 314, top: 110 }}>
     <div
       className="icon-keep-straight"
       style={{ transform: "translate(-50%, -50%)" }}
@@ -608,8 +631,8 @@ export default function CircularServicesSection() {
     </div>
   </div>
 
-  {/* RIGHT (ACTIVE FIRST) */}
-  <div className="absolute" style={{ left: 460, top: 280 }}>
+  {/* RIGHT */}
+  <div className="absolute" style={{ left: 520, top: 300 }}>
     <div
       className="icon-keep-straight"
       style={{ transform: "translate(-50%, -50%)" }}
@@ -619,7 +642,7 @@ export default function CircularServicesSection() {
   </div>
 
   {/* BOTTOM */}
-  <div className="absolute" style={{ left: 280, top: 460 }}>
+  <div className="absolute" style={{ left: 314, top: 490 }}>
     <div
       className="icon-keep-straight"
       style={{ transform: "translate(-50%, -50%)" }}
@@ -629,7 +652,7 @@ export default function CircularServicesSection() {
   </div>
 
   {/* LEFT */}
-  <div className="absolute" style={{ left: 100, top: 280 }}>
+  <div className="absolute" style={{ left: 108, top: 300 }}>
     <div
       className="icon-keep-straight"
       style={{ transform: "translate(-50%, -50%)" }}
@@ -642,8 +665,20 @@ export default function CircularServicesSection() {
             {/* CENTER */}
             <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
               <div
-                className="center-core flex h-44 w-44 items-center justify-center rounded-full border border-white/20 backdrop-blur-xl"
-                style={{ backgroundColor: "rgba(6,13,22,0.92)" }}
+                className="
+  center-core
+  relative
+  flex
+  h-44
+  w-44
+  items-center
+  justify-center
+  rounded-full
+  border
+  border-white/80
+  backdrop-blur-xl
+  shadow-[0_0_0_1px_rgba(255,255,255,0.08),0_0_40px_rgba(255,255,255,0.08)]
+"style={{ backgroundColor: "rgba(6,13,22,0.92)" }}
               >
                 <div ref={centerLogoRef}>
    <Image
@@ -660,61 +695,71 @@ export default function CircularServicesSection() {
         </div>
 
         {/* DIVIDER */}
-        <div className="translate-x-6 h-[72%] w-[2px] shrink-0 bg-gradient-to-b from-white/0 via-white/18 to-white/0" />
+        <div
+  className="
+    absolute
+    left-[833px]
+    top-[158px]
+    h-[72%]
+    w-[2px]
+    bg-gradient-to-b
+    from-white/0
+    via-white/18
+    to-white/0
+  "
+/>
 
         {/* RIGHT */}
-        <div className="relative flex w-1/2 items-center pl-20">
-          <div className="relative h-[620px] w-full">
-            {[introContent, ...services].map((service, i) => (
-              <div
-                key={i}
-                ref={(el) => {
-                  contentRefs.current[i] = el;
-                }}
-                className="absolute left-0 top-0 w-full will-change-transform"
-              >
-                <p className="mb-4 text-xs tracking-[0.35em] text-white/40">
-                  {service.subtitle}
-                </p>
+<div className="relative ml-[250px] flex h-[600px] w-[403px] items-center">
+  <div className="relative h-full w-full">
+    {[introContent, ...services].map((service, i) => (
+      <div
+        key={i}
+        ref={(el) => {
+          contentRefs.current[i] = el;
+        }}
+        className="absolute left-0 top-1/2 w-full -translate-y-1/2 will-change-transform"
+      >
+        <p className="mb-4 text-[24px] tracking-[0.35em] text-white/40">
+          {service.subtitle}
+        </p>
 
-                <h2 className="mb-6 max-w-xl text-5xl font-light leading-[1.08] text-white">
-                  {service.title}
-                </h2>
+        <h2 className="mb-6 max-w-xl text-[40px] font-light leading-[1.08] text-white">
+          {service.title}
+        </h2>
 
-                <p className="max-w-xl text-base leading-7 text-white/60">
-                  {service.desc}
-                </p>
+        <p className="max-w-xl text-[18px] leading-7 text-white/60">
+          {service.desc}
+        </p>
 
-                {service.items.length > 0 && (
-                  <div className="mt-10 space-y-7">
-                    {service.items.map((item) => (
-                      <div key={item.title} className="flex gap-5">
-                        <span className="mt-2 h-2.5 w-2.5 shrink-0 rounded-full border border-white/45 bg-white/10 shadow-[0_0_18px_rgba(255,255,255,0.16)]" />
+        {service.items.length > 0 && (
+          <div className="mt-10 space-y-7">
+            {service.items.map((item) => (
+              <div key={item.title} className="flex gap-5">
+                <span className="mt-2 h-2.5 w-2.5 shrink-0 rounded-full border border-white/45 bg-white/10 shadow-[0_0_18px_rgba(255,255,255,0.16)]" />
 
-                        <div>
-                          <p className="text-sm text-white">
-                            {item.title}
-                          </p>
+                <div>
+                  <p className="text-[16px] text-white">{item.title}</p>
 
-                          <p className="mt-2 max-w-sm text-sm leading-6 text-white/45">
-                            {item.desc}
-                          </p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-
-                <a
-                  href="mailto:hello@cirle.com"
-                  className="mt-10 inline-flex text-base font-medium text-white transition hover:text-white/70"
-                >
-                  Learn More →
-                </a>
+                  <p className="mt-2 max-w-sm text-[16px] leading-6 text-white/45">
+                    {item.desc}
+                  </p>
+                </div>
               </div>
             ))}
           </div>
-        </div>
+        )}
+
+        <a
+          href="mailto:hello@cirle.com"
+          className="mt-10 inline-flex text-[20px] font-medium text-white transition hover:text-white/70"
+        >
+          Learn More →
+        </a>
+      </div>
+    ))}
+  </div>
+</div>
       </div>
     </section>
   );

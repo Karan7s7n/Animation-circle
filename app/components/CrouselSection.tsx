@@ -57,9 +57,9 @@ const caseStudies = [
 ];
 
 export default function CrouselSection() {
-  const CARD_WIDTH = 300;
-  const CARD_HEIGHT = 425;
-  const GAP = 15;
+  const CARD_WIDTH = 260;
+  const CARD_HEIGHT = 390;
+  const GAP = 20;
 
   const duplicatedStudies = [
     ...caseStudies,
@@ -74,22 +74,17 @@ export default function CrouselSection() {
   const [transitionEnabled, setTransitionEnabled] =
     React.useState(true);
 
-  // ---------------------------------------
-  // NEXT / PREV
-  // ---------------------------------------
-
+  // NEXT
   const handleNext = () => {
     setCurrentIndex((prev) => prev + 1);
   };
 
+  // PREV
   const handlePrev = () => {
     setCurrentIndex((prev) => prev - 1);
   };
 
-  // ---------------------------------------
   // TRUE INFINITE LOOP
-  // ---------------------------------------
-
   React.useEffect(() => {
     const total = caseStudies.length;
 
@@ -132,9 +127,9 @@ export default function CrouselSection() {
       <div className="absolute left-1/2 top-1/2 h-[900px] w-[900px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-cyan-400/[0.04] blur-[220px]" />
 
       {/* TOP FADE */}
-      <div className="absolute inset-x-0 top-0 z-10 h-40 bg-gradient-to-b from-[#020817] to-transparent" />
+      <div className="absolute inset-x-0 top-0 z-10 h-40 bg-gradient-to-b from-[#0A0F14] to-transparent" />
 
-      <div className="relative z-20 mx-auto max-w-[1900px]">
+      <div className="relative z-20 mx-auto max-w-[1540px]">
         {/* HEADER */}
         <motion.div
           initial={{ opacity: 0, y: -60 }}
@@ -147,7 +142,7 @@ export default function CrouselSection() {
           className="mb-24 flex items-start justify-between px-10"
         >
           <div className="max-w-4xl">
-            <h2 className="text-[48px]  font-light leading-[0.98] tracking-[-0.07em] text-white">
+            <h2 className="text-[48px] font-light leading-[0.98] tracking-[-0.07em] text-white">
               Proven Outcomes in
               <br />
               Regulated Environments
@@ -173,10 +168,10 @@ export default function CrouselSection() {
         </motion.div>
 
         {/* CAROUSEL */}
-        <div className="overflow-hidden pl-2">
+        <div className="overflow-hidden px-10">
           <div
             className={`
-              flex items-stretch 
+              flex items-stretch
               ${
                 transitionEnabled
                   ? "transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]"
@@ -184,12 +179,20 @@ export default function CrouselSection() {
               }
             `}
             style={{
+              gap: `${GAP}px`,
               transform: `translateX(-${
                 currentIndex * (CARD_WIDTH + GAP)
               }px)`,
             }}
           >
             {duplicatedStudies.map((item, index) => {
+              const activeRangeStart = currentIndex;
+              const activeRangeEnd = currentIndex + 4;
+
+              const isVisible =
+                index >= activeRangeStart &&
+                index <= activeRangeEnd;
+
               const centerIndex = currentIndex + 2;
 
               const distance = Math.abs(index - centerIndex);
@@ -204,6 +207,7 @@ export default function CrouselSection() {
                     relative
                     shrink-0
                     overflow-hidden
+                    rounded-[28px]
                     border
                     border-white/10
                     bg-white/[0.03]
@@ -219,15 +223,15 @@ export default function CrouselSection() {
                           opacity-100
                           shadow-[0_0_120px_rgba(34,211,238,0.14)]
                         `
-                        : distance === 1
+                        : isVisible
                         ? `
                           z-10
-                          scale-[0.92]
-                          opacity-70
+                          scale-[0.94]
+                          opacity-80
                         `
                         : `
                           scale-[0.82]
-                          opacity-30
+                          opacity-25
                         `
                     }
                   `}
@@ -237,12 +241,13 @@ export default function CrouselSection() {
                   }}
                 >
                   {/* IMAGE */}
-                  <div className="relative h-full w-full overflow-hidden">
+                  <div className="relative h-full w-full overflow-hidden rounded-[28px]">
                     <Image
                       src={item.image}
                       alt={item.title}
                       fill
                       priority
+                      sizes="(min-width: 1280px) 20vw, (min-width: 768px) 25vw, 80vw"
                       className={`
                         object-cover
                         transition-all
@@ -267,8 +272,8 @@ export default function CrouselSection() {
                       `}
                     />
 
-                    {/* OVERLAYS */}
-                    <div className="absolute inset-0 bg-gradient-to-b from-[#020817]/5 via-transparent to-[#020817]/95" />
+                    {/* OVERLAY */}
+                    <div className="absolute inset-0 bg-gradient-to-b from-[#0A0F14]/5 via-transparent to-[#0A0F14]/95" />
 
                     <div
                       className={`
@@ -291,7 +296,7 @@ export default function CrouselSection() {
                       <div>
                         <p
                           className={`
-                            mb-6 text-xs tracking-[0.24em]
+                            mb-6 text-[12px] tracking-[0.24em]
                             ${
                               isCenter
                                 ? "text-cyan-100/80"
@@ -306,17 +311,7 @@ export default function CrouselSection() {
                       </div>
 
                       <div>
-                        <h3
-                          className="
-                            text-[20px]
-                            font-light
-                            leading-[1.05]
-                            tracking-[-0.055em]
-                            text-white
-                            transition-all
-                            duration-500
-                          "
-                        >
+                        <h3 className="text-[20px] font-light leading-[1.05] tracking-[-0.055em] text-white transition-all duration-500">
                           {item.title}
                         </h3>
                       </div>
