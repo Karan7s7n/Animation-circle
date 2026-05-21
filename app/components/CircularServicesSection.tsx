@@ -660,7 +660,7 @@ export default function CircularServicesSection() {
         </div>
 
         {/* DIVIDER */}
-        <div className="h-[72%] w-px shrink-0 bg-gradient-to-b from-white/0 via-white/18 to-white/0" />
+        <div className="translate-x-6 h-[72%] w-[2px] shrink-0 bg-gradient-to-b from-white/0 via-white/18 to-white/0" />
 
         {/* RIGHT */}
         <div className="relative flex w-1/2 items-center pl-20">
