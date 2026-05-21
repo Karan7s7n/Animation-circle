@@ -124,341 +124,357 @@ export default function CircularServicesSection() {
   
 
   useEffect(() => {
-    if (!sectionRef.current || !orbitRef.current) return;
+  if (!sectionRef.current || !orbitRef.current) return;
 
-    const initTimer = setTimeout(() => {
-      const ctx = gsap.context(() => {
-        // INITIAL STATES
-        contentRefs.current.forEach((el, i) => {
-          if (!el) return;
+  const section = sectionRef.current;
 
-          if (i === 0) {
-            gsap.set(el, {
-              opacity: 1,
-              y: 0,
-              visibility: "visible",
-            });
-          } else {
-            gsap.set(el, {
-              opacity: 0,
-              y: 40,
-              visibility: "visible",
-            });
-          }
-        });
+  let glowTicker: (() => void) | null = null;
 
-        gsap.set(".orbit-wrapper", {
-          opacity: 1,
-          scale: 1,
-        });
+  const ctx = gsap.context(() => {
+    // =========================
+    // INITIAL STATES
+    // =========================
+    contentRefs.current.forEach((el, i) => {
+      if (!el) return;
 
-        gsap.set(".right-glow", {
-          opacity: 0,
-        });
+      gsap.set(el, {
+        opacity: i === 0 ? 1 : 0,
+        y: i === 0 ? 0 : 40,
+        visibility: "visible",
+      });
+    });
 
-        gsap.set(".icon-keep-straight", {
-          rotation: 0,
-        });
+    gsap.set(orbitRef.current, {
+      opacity: 1,
+      scale: 1,
+      rotate: 0,
+      force3D: true,
+    });
 
-        gsap.set(".arc-gradient-wrapper", {
-          opacity: 0,
-        });
+    gsap.set(".right-glow", {
+      opacity: 0,
+    });
 
-        gsap.set(centerLogoRef.current, {
-          opacity: 1,
-          scale: 1,
-        });
+    gsap.set(".icon-keep-straight", {
+      rotation: 0,
+      force3D: true,
+    });
 
-        // AMBIENT GLOW
-        let t = 0;
+    gsap.set(".arc-gradient-wrapper", {
+      opacity: 0,
+    });
 
-        gsap.ticker.add(() => {
-          t += 0.01;
+    gsap.set(centerLogoRef.current, {
+      opacity: 1,
+      scale: 1,
+      force3D: true,
+    });
 
-          const wave = (Math.sin(t) + 1) / 2;
+    // =========================
+    // AMBIENT GLOW
+    // =========================
+    let t = 0;
 
-          const glow1 = 30 + wave * 20;
-          const glow2 = 100 + wave * 40;
-          const inset = 20 + wave * 20;
+    glowTicker = () => {
+      t += 0.01;
 
-          const brightness = 2 + wave * 1;
-          const blur = 8 + wave * 4;
-          const glow = 25 + wave * 15;
+      const wave = (Math.sin(t) + 1) / 2;
 
-          gsap.set(".center-core", {
-            boxShadow: `
-              0 0 ${glow1}px rgba(255,255,255,0.14),
-              0 0 ${glow2}px rgba(56,189,248,0.28),
-              inset 0 0 ${inset}px rgba(255,255,255,0.08)
-            `,
+      const glow1 = 30 + wave * 20;
+      const glow2 = 100 + wave * 40;
+      const inset = 20 + wave * 20;
+
+      const brightness = 2 + wave;
+      const blur = 8 + wave * 4;
+      const glow = 25 + wave * 15;
+
+      gsap.set(".center-core", {
+        boxShadow: `
+          0 0 ${glow1}px rgba(255,255,255,0.14),
+          0 0 ${glow2}px rgba(56,189,248,0.28),
+          inset 0 0 ${inset}px rgba(255,255,255,0.08)
+        `,
+      });
+
+      gsap.set(".center-logo", {
+        filter: `
+          brightness(${brightness})
+          drop-shadow(0 0 ${blur}px rgba(255,255,255,1))
+          drop-shadow(0 0 ${glow}px rgba(56,189,248,0.7))
+        `,
+      });
+    };
+
+    gsap.ticker.add(glowTicker);
+
+    // =========================
+    // ACTIVE DOT
+    // =========================
+    gsap.to(".active-dot", {
+      scale: 1.7,
+      duration: 2.2,
+      repeat: -1,
+      yoyo: true,
+      ease: "sine.inOut",
+      force3D: true,
+    });
+
+    // =========================
+    // MAIN TIMELINE
+    // =========================
+    const tl = gsap.timeline({
+      defaults: {
+        ease: "power2.inOut",
+      },
+      scrollTrigger: {
+        trigger: section,
+        start: "top top",
+        end: "+=6000",
+        scrub: 1.2,
+        pin: true,
+        anticipatePin: 1,
+        invalidateOnRefresh: true,
+        fastScrollEnd: true,
+
+        snap: {
+          snapTo: [0, 0.1, 0.2, 0.45, 0.7, 0.95, 1],
+          duration: { min: 0.25, max: 0.55 },
+          ease: "power2.out",
+          directional: true,
+        },
+
+        onRefresh: () => {
+          gsap.set(section, {
+            clearProps: "transform",
           });
+        },
+      },
+    });
 
-          gsap.set(".center-logo", {
-            filter: `
-              brightness(${brightness})
-              drop-shadow(0 0 ${blur}px rgba(255,255,255,1))
-              drop-shadow(0 0 ${glow}px rgba(56,189,248,0.7))
-            `,
-          });
-        });
+    // =========================
+    // INTRO OUT
+    // =========================
+    tl.to(
+      contentRefs.current[0],
+      {
+        opacity: 0,
+        y: -30,
+        duration: 5,
+      },
+      T.introOut
+    );
 
-        // ACTIVE DOT
-        gsap.to(".active-dot", {
-          scale: 1.7,
-          duration: 2.2,
-          repeat: -1,
-          yoyo: true,
-          ease: "sine.inOut",
-          filter:
-            "drop-shadow(0 0 10px rgba(255,255,255,0.95)) drop-shadow(0 0 25px rgba(56,189,248,0.8))",
-        });
+    // =========================
+    // LOGO SWITCH
+    // =========================
+    tl.to(
+      centerLogoRef.current,
+      {
+        opacity: 0,
+        scale: 0.8,
+        duration: 2,
+      },
+      T.orbitIn - 1
+    );
 
-        // MAIN TIMELINE
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top top",
-            end: "+=6000",
-            scrub: 1.5,
-            pin: true,
-            anticipatePin: 1,
-            snap: {
-              snapTo: [0, 0.1, 0.2, 0.45, 0.7, 0.95, 1],
-              duration: { min: 0.4, max: 0.8 },
-              ease: "power2.inOut",
-              delay: 0.05,
-              directional: true,
-            },
-          },
-        });
+    tl.call(
+      () => {
+        setLogoSrc("/logo2.png");
+      },
+      [],
+      T.orbitIn + 0.15
+    );
 
-        // INTRO OUT
-        tl.to(
-          contentRefs.current[0],
-          {
-            opacity: 0,
-            y: -30,
-            duration: T.orbitIn - T.introOut,
-            ease: "power2.out",
-          },
-          T.introOut
-        );
+    tl.to(
+      centerLogoRef.current,
+      {
+        opacity: 1,
+        scale: 1,
+        duration: 2.5,
+        ease: "power3.out",
+      },
+      T.orbitIn + 0.5
+    );
 
-        // LOGO SWITCH OUT// LOGO SWITCH OUT
-tl.to(
-  centerLogoRef.current,
-  {
-    opacity: 0,
-    scale: 0.8,
-    duration: 2,
-    ease: "power2.out",
-  },
-  T.orbitIn - 1
-);
+    // =========================
+    // ORBIT INTRO
+    // =========================
+    tl.to(
+      ".right-glow",
+      {
+        opacity: 1,
+        duration: 6,
+      },
+      T.orbitIn
+    );
 
-// CHANGE IMAGE
-// CHANGE IMAGE
-tl.call(
-  () => {
-    setLogoSrc("/logo2.png");
-  },
-  [],
-  T.orbitIn + 0.15
-);
+    tl.to(
+      ".arc-gradient-wrapper",
+      {
+        opacity: 1,
+        duration: 6,
+      },
+      T.orbitIn
+    );
 
-// LOGO SWITCH IN
-tl.to(
-  centerLogoRef.current,
-  {
-    opacity: 1,
-    scale: 1,
-    duration: 2.5,
-    ease: "power3.out",
-  },
-  T.orbitIn + 0.5
-);
+    // =========================
+    // SERVICE 1
+    // =========================
+    tl.to(
+      contentRefs.current[1],
+      {
+        opacity: 1,
+        y: 0,
+        duration: 7,
+      },
+      T.orbitIn + 2
+    );
 
-        // ORBIT IN
-        tl.to(
-          ".orbit-wrapper",
-          {
-            opacity: 1,
-            scale: 1,
-            duration: 6,
-            ease: "power2.out",
-          },
-          T.orbitIn
-        );
+    // =========================
+    // ROTATION 1
+    // =========================
+    tl.to(
+      orbitRef.current,
+      {
+        rotate: 90,
+        duration: 18,
+      },
+      T.rot1
+    );
 
-        tl.to(
-          ".right-glow",
-          {
-            opacity: 1,
-            duration: 6,
-            ease: "power2.out",
-          },
-          T.orbitIn
-        );
+    tl.to(
+      ".icon-keep-straight",
+      {
+        rotation: -90,
+        duration: 18,
+      },
+      T.rot1
+    );
 
-        tl.to(
-          ".arc-gradient-wrapper",
-          {
-            opacity: 1,
-            duration: 6,
-            ease: "power2.out",
-          },
-          T.orbitIn
-        );
+    tl.to(
+      contentRefs.current[1],
+      {
+        opacity: 0,
+        y: -30,
+        duration: 5,
+      },
+      T.rot1
+    );
 
-        // SERVICE 1
-        tl.to(
-          contentRefs.current[1],
-          {
-            opacity: 1,
-            y: 0,
-            duration: 8,
-            ease: "power2.out",
-          },
-          T.orbitIn + 2
-        );
+    tl.to(
+      contentRefs.current[2],
+      {
+        opacity: 1,
+        y: 0,
+        duration: 6,
+      },
+      T.rot1 + 8
+    );
 
-        // ROTATION 1
-        tl.to(
-          orbitRef.current,
-          {
-            rotate: -90,
-            duration: 18,
-            ease: "power2.inOut",
-          },
-          T.rot1
-        );
+    // =========================
+    // ROTATION 2
+    // =========================
+    tl.to(
+      orbitRef.current,
+      {
+        rotate: 180,
+        duration: 18,
+      },
+      T.rot2
+    );
 
-        tl.to(
-          ".icon-keep-straight",
-          {
-            rotation: 90,
-            duration: 18,
-            ease: "power2.inOut",
-          },
-          T.rot1
-        );
+    tl.to(
+      ".icon-keep-straight",
+      {
+        rotation: -180,
+        duration: 18,
+      },
+      T.rot2
+    );
 
-        tl.to(
-          contentRefs.current[1],
-          {
-            opacity: 0,
-            y: -30,
-            duration: 6,
-            ease: "power2.in",
-          },
-          T.rot1
-        );
+    tl.to(
+      contentRefs.current[2],
+      {
+        opacity: 0,
+        y: -30,
+        duration: 5,
+      },
+      T.rot2
+    );
 
-        tl.to(
-          contentRefs.current[2],
-          {
-            opacity: 1,
-            y: 0,
-            duration: 7,
-            ease: "power2.out",
-          },
-          T.rot1 + 8
-        );
+    tl.to(
+      contentRefs.current[3],
+      {
+        opacity: 1,
+        y: 0,
+        duration: 6,
+      },
+      T.rot2 + 8
+    );
 
-        // ROTATION 2
-        tl.to(
-          orbitRef.current,
-          {
-            rotate: -180,
-            duration: 18,
-            ease: "power2.inOut",
-          },
-          T.rot2
-        );
+    // =========================
+    // ROTATION 3
+    // =========================
+    tl.to(
+      orbitRef.current,
+      {
+        rotate: 270,
+        duration: 18,
+      },
+      T.rot3
+    );
 
-        tl.to(
-          ".icon-keep-straight",
-          {
-            rotation: 180,
-            duration: 18,
-            ease: "power2.inOut",
-          },
-          T.rot2
-        );
+    tl.to(
+      ".icon-keep-straight",
+      {
+        rotation: -270,
+        duration: 18,
+      },
+      T.rot3
+    );
 
-        tl.to(
-          contentRefs.current[2],
-          {
-            opacity: 0,
-            y: -30,
-            duration: 6,
-            ease: "power2.in",
-          },
-          T.rot2
-        );
+    tl.to(
+      contentRefs.current[3],
+      {
+        opacity: 0,
+        y: -30,
+        duration: 5,
+      },
+      T.rot3
+    );
 
-        tl.to(
-          contentRefs.current[3],
-          {
-            opacity: 1,
-            y: 0,
-            duration: 7,
-            ease: "power2.out",
-          },
-          T.rot2 + 8
-        );
+    tl.to(
+      contentRefs.current[4],
+      {
+        opacity: 1,
+        y: 0,
+        duration: 6,
+      },
+      T.rot3 + 8
+    );
 
-        // ROTATION 3
-        tl.to(
-          orbitRef.current,
-          {
-            rotate: -270,
-            duration: 18,
-            ease: "power2.inOut",
-          },
-          T.rot3
-        );
+    tl.to({}, { duration: 10 });
 
-        tl.to(
-          ".icon-keep-straight",
-          {
-            rotation: 270,
-            duration: 18,
-            ease: "power2.inOut",
-          },
-          T.rot3
-        );
+    // =========================
+    // IMPORTANT
+    // =========================
+    ScrollTrigger.refresh();
+  }, section);
 
-        tl.to(
-          contentRefs.current[3],
-          {
-            opacity: 0,
-            y: -30,
-            duration: 6,
-            ease: "power2.in",
-          },
-          T.rot3
-        );
+  return () => {
+    if (glowTicker) {
+      gsap.ticker.remove(glowTicker);
+    }
 
-        tl.to(
-          contentRefs.current[4],
-          {
-            opacity: 1,
-            y: 0,
-            duration: 7,
-            ease: "power2.out",
-          },
-          T.rot3 + 8
-        );
+    ScrollTrigger.getAll().forEach((trigger) => {
+      if (trigger.trigger === section) {
+        trigger.kill();
+      }
+    });
 
-        tl.to({}, { duration: T.end - (T.rot3 + 18) }, T.rot3 + 18);
-      }, sectionRef);
-
-      return () => ctx.revert();
-    }, 150);
-
-    return () => clearTimeout(initTimer);
-  }, []);
+    ctx.revert();
+  };
+}, []);
 
   return (
     <section
@@ -483,7 +499,6 @@ tl.to(
             {/* RINGS */}
             <div className="absolute inset-0 rounded-full border border-white/10" />
 
-            <div className="absolute inset-[60px] rounded-full border border-white/[0.06]" />
 
             {/* ARC */}
             <div
@@ -583,42 +598,46 @@ tl.to(
 
             {/* ORBIT */}
             <div ref={orbitRef} className="orbit-wrapper absolute inset-0">
-              <div className="absolute" style={{ left: 280, top: 100 }}>
-                <div
-                  className="icon-keep-straight"
-                  style={{ transform: "translate(-50%, -50%)" }}
-                >
-                  <ServiceIcon service={services[3]} />
-                </div>
-              </div>
+  {/* TOP */}
+  <div className="absolute" style={{ left: 280, top: 100 }}>
+    <div
+      className="icon-keep-straight"
+      style={{ transform: "translate(-50%, -50%)" }}
+    >
+      <ServiceIcon service={services[1]} />
+    </div>
+  </div>
 
-              <div className="absolute" style={{ left: 460, top: 280 }}>
-                <div
-                  className="icon-keep-straight"
-                  style={{ transform: "translate(-50%, -50%)" }}
-                >
-                  <ServiceIcon active service={services[0]} />
-                </div>
-              </div>
+  {/* RIGHT (ACTIVE FIRST) */}
+  <div className="absolute" style={{ left: 460, top: 280 }}>
+    <div
+      className="icon-keep-straight"
+      style={{ transform: "translate(-50%, -50%)" }}
+    >
+      <ServiceIcon active service={services[0]} />
+    </div>
+  </div>
 
-              <div className="absolute" style={{ left: 280, top: 460 }}>
-                <div
-                  className="icon-keep-straight"
-                  style={{ transform: "translate(-50%, -50%)" }}
-                >
-                  <ServiceIcon service={services[1]} />
-                </div>
-              </div>
+  {/* BOTTOM */}
+  <div className="absolute" style={{ left: 280, top: 460 }}>
+    <div
+      className="icon-keep-straight"
+      style={{ transform: "translate(-50%, -50%)" }}
+    >
+      <ServiceIcon service={services[3]} />
+    </div>
+  </div>
 
-              <div className="absolute" style={{ left: 100, top: 280 }}>
-                <div
-                  className="icon-keep-straight"
-                  style={{ transform: "translate(-50%, -50%)" }}
-                >
-                  <ServiceIcon service={services[2]} />
-                </div>
-              </div>
-            </div>
+  {/* LEFT */}
+  <div className="absolute" style={{ left: 100, top: 280 }}>
+    <div
+      className="icon-keep-straight"
+      style={{ transform: "translate(-50%, -50%)" }}
+    >
+      <ServiceIcon service={services[2]} />
+    </div>
+  </div>
+</div>
 
             {/* CENTER */}
             <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
@@ -711,18 +730,19 @@ function ServiceIcon({
   return (
     <div className="flex flex-col items-center gap-2">
       <div
-        className={`flex h-14 w-14 items-center justify-center ${
+        className={`flex h-[55px] w-[55px] items-center justify-center ${
           active
-            ? "drop-shadow-[0_0_12px_rgba(56,189,248,0.6)]"
-            : "opacity-55"
+            ? "opacity-100"
+            : "opacity-100"
         }`}
       >
         <Image
-          src={service.image}
-          alt={service.iconTitle ?? service.title}
-          width={30}
-          height={30}
-        />
+    src={service.image}
+    alt={service.iconTitle ?? service.title}
+    width={55}
+    height={55}
+    className="object-contain"
+  />
       </div>
 
       <p className="text-[9px] tracking-[0.25em] text-white/50">

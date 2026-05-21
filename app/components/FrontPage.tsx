@@ -90,54 +90,75 @@ export default function FrontPage() {
 
       const cards = q("[data-hero-card]");
 
-      cards.forEach((card: Element) => {
-        const currentImage = card.querySelector("[data-current-image]");
-        const nextImage = card.querySelector("[data-next-image]");
 
-        gsap.timeline({
-          scrollTrigger: {
-            trigger: section,
-            start: "top top",
-            end: "bottom top",
-            scrub: 0.6,
-          },
-        })
-          // main card fade out
-          .to(
-            card,
-            {
-              y: -40,
-              autoAlpha: 0,
-              ease: "none",
-              duration: 1,
-            },
-            0
-          )
+cards.forEach((card: Element) => {
+  const currentImage = card.querySelector(
+    "[data-current-image]"
+  ) as HTMLElement;
 
-          // current image fades out
-          .to(
-            currentImage,
-            {
-              autoAlpha: 0,
-              scale: 1.08,
-              ease: "none",
-              duration: 0.45,
-            },
-            0
-          )
+  const nextImage = card.querySelector(
+    "[data-next-image]"
+  ) as HTMLElement;
 
-          // next image fades in while scrolling
-          .to(
-            nextImage,
-            {
-              autoAlpha: 1,
-              scale: 1,
-              ease: "none",
-              duration: 0.45,
-            },
-            0.1
-          );
-      });
+  // DEFAULT STATE
+  gsap.set(currentImage, {
+    autoAlpha: 0,
+    scale: 1,
+  });
+
+  gsap.set(nextImage, {
+    autoAlpha: 1,
+    scale: 1,
+  });
+
+  // HOVER IN
+  card.addEventListener("mouseenter", () => {
+    gsap.to(nextImage, {
+      autoAlpha: 0,
+      scale: 1.04,
+      duration: 0.45,
+      ease: "power3.out",
+    });
+
+    gsap.to(currentImage, {
+      autoAlpha: 1,
+      scale: 1,
+      duration: 0.45,
+      ease: "power3.out",
+    });
+  });
+
+  // HOVER OUT
+  card.addEventListener("mouseleave", () => {
+    gsap.to(currentImage, {
+      autoAlpha: 0,
+      scale: 1.04,
+      duration: 0.45,
+      ease: "power3.out",
+    });
+
+    gsap.to(nextImage, {
+      autoAlpha: 1,
+      scale: 1,
+      duration: 0.45,
+      ease: "power3.out",
+    });
+  });
+
+  // SCROLL OUT
+  gsap.to(card, {
+    y: -40,
+    autoAlpha: 0,
+    ease: "none",
+
+    scrollTrigger: {
+      trigger: section,
+      start: "top top",
+      end: "bottom top",
+      scrub: 0.6,
+    },
+  });
+});
 
       gsap.timeline({
         scrollTrigger: {

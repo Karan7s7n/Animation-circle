@@ -28,7 +28,12 @@ const legalLinks = [
 
 export default function Footer() {
   return (
-    <footer className="relative overflow-hidden border-t border-white/5 bg-[#020817]">
+    <footer
+      className="relative overflow-hidden border-t border-white/5 bg-[#0A0F14]"
+      style={{
+        fontFamily: '"Test Söhne", sans-serif',
+      }}
+    >
       {/* BG GLOW */}
       <div className="absolute left-1/2 top-0 h-[400px] w-[400px] -translate-x-1/2 rounded-full bg-cyan-400/[0.03] blur-[140px]" />
 
@@ -41,9 +46,10 @@ export default function Footer() {
               <div className="flex items-center gap-4">
                 <div className="relative h-14 w-14">
                   <Image
-                    src="/Vector.png"
+                    src="/logo2.png"
                     alt="Logo"
                     fill
+                    sizes="56px"
                     className="object-contain brightness-[12]"
                   />
                 </div>
@@ -53,23 +59,24 @@ export default function Footer() {
                 </h2>
               </div>
 
-              {/* TEXT */}
-              <p className="mt-12 max-w-[240px] text-lg leading-8 text-white/75">
+              {/* GREY TEXT = 14 */}
+              <p className="mt-12 max-w-[240px] text-[14px] leading-7 text-white/75">
                 Regulatory Confidence.
                 <br />
                 Built for Life Sciences.
               </p>
             </div>
 
-            {/* COPYRIGHT */}
-            <p className="mt-20 text-sm text-white/35">
+            {/* GREY TEXT = 14 */}
+            <p className="mt-20 text-[14px] text-white/35">
               © 2025 RRxCo. All Rights Reserved
             </p>
           </div>
 
           {/* SERVICES */}
           <div>
-            <h3 className="mb-8 text-sm font-medium text-white">
+            {/* WHITE TEXT = 16 */}
+            <h3 className="mb-8 text-[16px] font-medium text-white">
               Services
             </h3>
 
@@ -78,7 +85,14 @@ export default function Footer() {
                 <Link
                   key={item}
                   href="#"
-                  className="block text-[15px] text-white/55 transition-colors duration-300 hover:text-white"
+                  className="
+                    block
+                    text-[14px]
+                    text-white/55
+                    transition-colors
+                    duration-300
+                    hover:text-white
+                  "
                 >
                   {item}
                 </Link>
@@ -88,7 +102,8 @@ export default function Footer() {
 
           {/* QUICK LINKS */}
           <div>
-            <h3 className="mb-8 text-sm font-medium text-white">
+            {/* WHITE TEXT = 16 */}
+            <h3 className="mb-8 text-[16px] font-medium text-white">
               Quick Links
             </h3>
 
@@ -97,7 +112,14 @@ export default function Footer() {
                 <Link
                   key={item}
                   href="#"
-                  className="block text-[15px] text-white/55 transition-colors duration-300 hover:text-white"
+                  className="
+                    block
+                    text-[14px]
+                    text-white/55
+                    transition-colors
+                    duration-300
+                    hover:text-white
+                  "
                 >
                   {item}
                 </Link>
@@ -107,7 +129,8 @@ export default function Footer() {
 
           {/* LEGAL */}
           <div>
-            <h3 className="mb-8 text-sm font-medium text-white">
+            {/* WHITE TEXT = 16 */}
+            <h3 className="mb-8 text-[16px] font-medium text-white">
               Legal
             </h3>
 
@@ -116,7 +139,14 @@ export default function Footer() {
                 <Link
                   key={item}
                   href="#"
-                  className="block text-[15px] text-white/55 transition-colors duration-300 hover:text-white"
+                  className="
+                    block
+                    text-[14px]
+                    text-white/55
+                    transition-colors
+                    duration-300
+                    hover:text-white
+                  "
                 >
                   {item}
                 </Link>
@@ -126,21 +156,36 @@ export default function Footer() {
 
           {/* CONTACT */}
           <div>
-            <h3 className="mb-8 text-sm font-medium text-white">
+            {/* WHITE TEXT = 16 */}
+            <h3 className="mb-8 text-[16px] font-medium text-white">
               Get in Touch
             </h3>
 
             <div className="space-y-5">
               <a
                 href="mailto:info@rrxco.com"
-                className="block text-[15px] text-white/55 transition-colors duration-300 hover:text-white"
+                className="
+                  block
+                  text-[14px]
+                  text-white/55
+                  transition-colors
+                  duration-300
+                  hover:text-white
+                "
               >
                 info@rrxco.com
               </a>
 
               <a
                 href="tel:+4401256961200"
-                className="block text-[15px] text-white/55 transition-colors duration-300 hover:text-white"
+                className="
+                  block
+                  text-[14px]
+                  text-white/55
+                  transition-colors
+                  duration-300
+                  hover:text-white
+                "
               >
                 +44 (0) 1256 961 200
               </a>
@@ -149,17 +194,29 @@ export default function Footer() {
               <div className="flex items-center gap-5 pt-2">
                 <Link
                   href="#"
-                  className="text-white/60 transition-all duration-300 hover:scale-110 hover:text-white"
+                  className="
+                    text-white/60
+                    transition-all
+                    duration-300
+                    hover:scale-110
+                    hover:text-white
+                  "
                 >
                   <FiInstagram className="h-5 w-5" />
-  </Link>
+                </Link>
 
-  <Link
-    href="#"
-    className="text-white/60 transition-all duration-300 hover:scale-110 hover:text-white"
-  >
-    <FiLinkedin className="h-5 w-5" />
-  </Link>
+                <Link
+                  href="#"
+                  className="
+                    text-white/60
+                    transition-all
+                    duration-300
+                    hover:scale-110
+                    hover:text-white
+                  "
+                >
+                  <FiLinkedin className="h-5 w-5" />
+                </Link>
               </div>
             </div>
           </div>

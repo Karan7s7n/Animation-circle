@@ -3,6 +3,7 @@
 import * as React from "react";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { motion } from "framer-motion";
 
 const caseStudies = [
   {
@@ -39,19 +40,33 @@ const caseStudies = [
       "Regulatory transformation programme improved operational efficiency",
     image: "/bio.png",
   },
+  {
+    id: "6",
+    category: "CASE STUDY",
+    title:
+      "Strategic quality hiring enabled faster GMP manufacturing scale-up",
+    image: "/medtech.png",
+  },
+  {
+    id: "7",
+    category: "CASE STUDY",
+    title:
+      "Clinical operations expansion strengthened delivery across EU markets",
+    image: "/pharma.png",
+  },
 ];
 
-export default function CaseStudiesSection() {
-  const itemsToShow = 3;
+export default function CrouselSection() {
+  const CARD_WIDTH = 300;
+  const CARD_HEIGHT = 425;
+  const GAP = 15;
 
-  // DUPLICATE ITEMS FOR INFINITE EFFECT
   const duplicatedStudies = [
     ...caseStudies,
     ...caseStudies,
     ...caseStudies,
   ];
 
-  // START FROM MIDDLE SET
   const [currentIndex, setCurrentIndex] = React.useState(
     caseStudies.length
   );
@@ -59,30 +74,25 @@ export default function CaseStudiesSection() {
   const [transitionEnabled, setTransitionEnabled] =
     React.useState(true);
 
-  // -----------------------------------
-  // NEXT
-  // -----------------------------------
+  // ---------------------------------------
+  // NEXT / PREV
+  // ---------------------------------------
 
   const handleNext = () => {
     setCurrentIndex((prev) => prev + 1);
   };
 
-  // -----------------------------------
-  // PREV
-  // -----------------------------------
-
   const handlePrev = () => {
     setCurrentIndex((prev) => prev - 1);
   };
 
-  // -----------------------------------
-  // TRUE INFINITE RESET
-  // -----------------------------------
+  // ---------------------------------------
+  // TRUE INFINITE LOOP
+  // ---------------------------------------
 
   React.useEffect(() => {
     const total = caseStudies.length;
 
-    // RIGHT EDGE
     if (currentIndex >= total * 2) {
       const timer = setTimeout(() => {
         setTransitionEnabled(false);
@@ -99,8 +109,7 @@ export default function CaseStudiesSection() {
       return () => clearTimeout(timer);
     }
 
-    // LEFT EDGE
-    if (currentIndex <= total - itemsToShow) {
+    if (currentIndex <= total - 2) {
       const timer = setTimeout(() => {
         setTransitionEnabled(false);
 
@@ -118,15 +127,27 @@ export default function CaseStudiesSection() {
   }, [currentIndex]);
 
   return (
-    <section className="relative overflow-hidden bg-[#020817] py-32">
+    <section className="relative overflow-hidden bg-[#0A0F14] py-32">
       {/* BG GLOW */}
-      <div className="absolute left-1/2 top-1/2 h-[700px] w-[700px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-cyan-400/5 blur-[180px]" />
+      <div className="absolute left-1/2 top-1/2 h-[900px] w-[900px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-cyan-400/[0.04] blur-[220px]" />
 
-      <div className="relative z-10 mx-auto max-w-[1600px] px-6">
+      {/* TOP FADE */}
+      <div className="absolute inset-x-0 top-0 z-10 h-40 bg-gradient-to-b from-[#020817] to-transparent" />
+
+      <div className="relative z-20 mx-auto max-w-[1900px]">
         {/* HEADER */}
-        <div className="mb-20 flex items-start justify-between">
-          <div className="max-w-2xl">
-            <h2 className="text-5xl font-light leading-[1.05] tracking-[-0.04em] text-white md:text-6xl">
+        <motion.div
+          initial={{ opacity: 0, y: -60 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{
+            duration: 1,
+            ease: [0.22, 1, 0.36, 1],
+          }}
+          viewport={{ once: true }}
+          className="mb-24 flex items-start justify-between px-10"
+        >
+          <div className="max-w-4xl">
+            <h2 className="text-[48px]  font-light leading-[0.98] tracking-[-0.07em] text-white">
               Proven Outcomes in
               <br />
               Regulated Environments
@@ -137,25 +158,25 @@ export default function CaseStudiesSection() {
           <div className="hidden items-center gap-4 md:flex">
             <button
               onClick={handlePrev}
-              className="flex h-12 w-12 items-center justify-center rounded-full border border-white/15 text-white/80 transition-all duration-300 hover:border-white/40 hover:bg-white/5"
+              className="group flex h-14 w-14 items-center justify-center rounded-full border border-white/15 bg-white/[0.03] text-white/48 transition-all duration-300 hover:border-white/40 hover:bg-white/5"
             >
-              <ChevronLeft className="h-5 w-5" />
+              <ChevronLeft className="h-5 w-5 transition-transform duration-300 group-hover:-translate-x-0.5" />
             </button>
 
             <button
               onClick={handleNext}
-              className="flex h-12 w-12 items-center justify-center rounded-full border border-white/15 text-white/80 transition-all duration-300 hover:border-white/40 hover:bg-white/5"
+              className="group flex h-14 w-14 items-center justify-center rounded-full border border-white/15 bg-white/[0.03] text-white/48 transition-all duration-300 hover:border-white/40 hover:bg-white/5"
             >
-              <ChevronRight className="h-5 w-5" />
+              <ChevronRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-0.5" />
             </button>
           </div>
-        </div>
+        </motion.div>
 
         {/* CAROUSEL */}
-        <div className="overflow-hidden">
+        <div className="overflow-hidden pl-2">
           <div
             className={`
-              flex gap-8
+              flex items-stretch 
               ${
                 transitionEnabled
                   ? "transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]"
@@ -163,15 +184,17 @@ export default function CaseStudiesSection() {
               }
             `}
             style={{
-              transform: `translateX(calc(-${
-                currentIndex * (100 / itemsToShow)
-              }% - ${currentIndex * (32 / itemsToShow)}px))`,
+              transform: `translateX(-${
+                currentIndex * (CARD_WIDTH + GAP)
+              }px)`,
             }}
           >
             {duplicatedStudies.map((item, index) => {
-              const centerIndex = currentIndex + 1;
+              const centerIndex = currentIndex + 2;
 
-              const isCenter = index === centerIndex;
+              const distance = Math.abs(index - centerIndex);
+
+              const isCenter = distance === 0;
 
               return (
                 <div
@@ -191,25 +214,30 @@ export default function CaseStudiesSection() {
                     ${
                       isCenter
                         ? `
+                          z-20
                           scale-100
                           opacity-100
-                          shadow-[0_0_100px_rgba(34,211,238,0.14)]
+                          shadow-[0_0_120px_rgba(34,211,238,0.14)]
+                        `
+                        : distance === 1
+                        ? `
+                          z-10
+                          scale-[0.92]
+                          opacity-70
                         `
                         : `
-                          scale-[0.92]
-                          opacity-60
+                          scale-[0.82]
+                          opacity-30
                         `
                     }
                   `}
                   style={{
-                    flexBasis: `calc((100% / ${itemsToShow}) - ${
-                      ((itemsToShow - 1) * 32) /
-                      itemsToShow
-                    }px)`,
+                    width: `${CARD_WIDTH}px`,
+                    height: `${CARD_HEIGHT}px`,
                   }}
                 >
                   {/* IMAGE */}
-                  <div className="relative h-[560px] overflow-hidden">
+                  <div className="relative h-full w-full overflow-hidden">
                     <Image
                       src={item.image}
                       alt={item.title}
@@ -226,13 +254,12 @@ export default function CaseStudiesSection() {
                           isCenter
                             ? `
                               grayscale-0
-                              saturate-[1.35]
                               brightness-100
                               contrast-110
+                              saturate-[1.35]
                             `
                             : `
                               grayscale
-                              saturate-0
                               brightness-[0.45]
                               contrast-125
                             `
@@ -246,7 +273,6 @@ export default function CaseStudiesSection() {
                     <div
                       className={`
                         absolute inset-0 transition-all duration-500
-
                         ${
                           isCenter
                             ? "bg-black/10"
@@ -266,7 +292,6 @@ export default function CaseStudiesSection() {
                         <p
                           className={`
                             mb-6 text-xs tracking-[0.24em]
-
                             ${
                               isCenter
                                 ? "text-cyan-100/80"
@@ -282,19 +307,15 @@ export default function CaseStudiesSection() {
 
                       <div>
                         <h3
-                          className={`
+                          className="
+                            text-[20px]
                             font-light
-                            leading-[1.15]
-                            tracking-[-0.03em]
+                            leading-[1.05]
+                            tracking-[-0.055em]
+                            text-white
                             transition-all
                             duration-500
-
-                            ${
-                              isCenter
-                                ? "text-[2.2rem] text-white"
-                                : "text-[1.7rem] text-white/75"
-                            }
-                          `}
+                          "
                         >
                           {item.title}
                         </h3>
