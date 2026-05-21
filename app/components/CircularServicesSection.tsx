@@ -527,31 +527,71 @@ ScrollTrigger.create({
 }, []);
 
   return (
-    <section
-      id="services"
-      ref={sectionRef}
-      className="relative min-h-screen w-full overflow-hidden flex items-center justify-center"
-      style={{ backgroundColor: "rgb(14,19,26)" }}
+  <section
+    id="services"
+    ref={sectionRef}
+    className="relative w-full min-h-screen overflow-hidden flex items-center justify-center"
+    style={{ backgroundColor: "rgb(14,19,26)" }}
+  >
+    {/* GLOBAL BG */}
+    <div className="absolute inset-0 bg-[#070b10]" />
+    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_40%_50%,rgba(56,189,248,0.05),transparent_60%)]" />
+
+    {/* =========================
+        FIXED DESIGN FRAME
+    ========================== */}
+    <div
+      className="
+        relative
+        flex
+        items-center
+        justify-between
+        gap-[80px]
+        w-[1440px]   /* 👈 fixed design width */
+        h-[800px]    /* 👈 fixed design height */
+        scale-[0.95] /* optional slight shrink */
+        origin-center
+      "
     >
-      <div
-        className="absolute inset-0 z-0"
-        style={{ backgroundColor: "rgb(14,19,26)" }}
-      />
 
-      <div className="absolute inset-0 z-0 bg-[radial-gradient(ellipse_at_35%_50%,rgba(56,189,248,0.05),transparent_55%)]" />
+      {/* LEFT */}
+      <div className="relative flex w-[650px] items-center justify-center">
+        <div className="relative h-[600px] w-[600px]">
+          
+          {/* ORBIT SYSTEM (UNCHANGED) */}
+          <div className="absolute inset-0 rounded-full border border-white/30" />
 
-      <div className="absolute inset-0 z-0 bg-[radial-gradient(ellipse_at_70%_50%,rgba(99,102,241,0.04),transparent_50%)]" />
+          <div
+            ref={orbitRef}
+            className="absolute inset-0 brightness-125 contrast-125"
+          >
+            {/* icons unchanged */}
+            <div className="absolute" style={{ left: 300, top: 100 }}>
+              <div className="icon-keep-straight" style={{ transform: "translate(-50%, -50%)" }}>
+                <ServiceIcon active={isIntro ? true : activeIndex === 1} service={services[1]} />
+              </div>
+            </div>
 
-      <div className="relative z-10 mx-auto flex h-full max-w-6xl items-center justify-between px-3 lg:px-10">
-        {/* LEFT */}
-<div className="relative flex w-[600px] items-center justify-start -ml-60">
-  <div className="relative h-[600px] w-[600px] overflow-visible">
-            {/* RINGS */}
-            <div className="absolute inset-0 rounded-full border border-white/30" />
+            <div className="absolute" style={{ left: 520, top: 300 }}>
+              <div className="icon-keep-straight" style={{ transform: "translate(-50%, -50%)" }}>
+                <ServiceIcon active={isIntro ? true : activeIndex === 0} service={services[0]} />
+              </div>
+            </div>
 
+            <div className="absolute" style={{ left: 300, top: 500 }}>
+              <div className="icon-keep-straight" style={{ transform: "translate(-50%, -50%)" }}>
+                <ServiceIcon active={isIntro ? true : activeIndex === 3} service={services[3]} />
+              </div>
+            </div>
 
-            {/* ARC */}
-            <div
+            <div className="absolute" style={{ left: 100, top: 300 }}>
+              <div className="icon-keep-straight" style={{ transform: "translate(-50%, -50%)" }}>
+                <ServiceIcon active={isIntro ? true : activeIndex === 2} service={services[2]} />
+              </div>
+            </div>
+          </div>
+
+          <div
               className="arc-gradient-wrapper absolute inset-0"
               style={{ opacity: 0 }}
             >
@@ -647,202 +687,75 @@ ScrollTrigger.create({
               </div>
             </div>
 
-            <div
-  ref={orbitRef}
-  className="
-    orbit-wrapper
-    absolute
-    inset-0
-    opacity-100
-    brightness-125
-    contrast-125
-    drop-shadow-[0_0_40px_rgba(56,189,248,0.28)]
-  "
->
-  {/* TOP */}
-  <div className="absolute" style={{ left: 300, top: 100 }}>
-    <div
-      className="icon-keep-straight"
-      style={{ transform: "translate(-50%, -50%)" }}
-    >
-      <ServiceIcon
-  active={isIntro ? true : activeIndex === 1}
-  service={services[1]}
-/>
-    </div>
-  </div>
-
-  {/* RIGHT */}
-  <div className="absolute" style={{ left: 520, top: 300 }}>
-    <div
-      className="icon-keep-straight"
-      style={{ transform: "translate(-50%, -50%)" }}
-    >
-      
-
-
-{/* RIGHT */}
-<ServiceIcon
-  active={isIntro ? true : activeIndex === 0}
-  service={services[0]}
-/>
-
-{/* BOTTOM */}
-
-
-{/* LEFT */}
-
-    </div>
-  </div>
-
-  {/* BOTTOM */}
-  <div className="absolute" style={{ left: 300, top: 500 }}>
-    <div
-      className="icon-keep-straight"
-      style={{ transform: "translate(-50%, -50%)" }}
-    >
-      <ServiceIcon
-  active={isIntro ? true : activeIndex === 3}
-  service={services[3]}
-/>
-    </div>
-  </div>
-
-  {/* LEFT */}
-  <div className="absolute" style={{ left: 100, top: 300 }}>
-    <div
-      className="icon-keep-straight"
-      style={{ transform: "translate(-50%, -50%)" }}
-    >
-      <ServiceIcon
-  active={isIntro ? true : activeIndex === 2}
-  service={services[2]}
-/>
-    </div>
-  </div>
-</div>
-
-            {/* CENTER */}
-            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-              <div
-  className="
-    center-core
-    relative
-    flex
-    h-[250px] w-[250px]
-    items-center
-    justify-center
-    rounded-full
-    border border-white/70
-    backdrop-blur-2xl
-    shadow-[0_0_0_1px_rgba(255,255,255,0.06),0_0_60px_rgba(56,189,248,0.12)]
-  "
-  style={{ backgroundColor: "#0A0f14" }}
->
-                <div ref={centerLogoRef} className="flex items-center justify-center">
-  <div className="relative h-[260px] w-[260px] flex items-center justify-center">
-
-    <Image
-      src="/logo1.png"
-      alt="Logo 1"
-      width={170}
-      height={170}
-      className="absolute object-contain transition-opacity duration-700"
-      style={{
-        opacity: logoSrc === "/logo1.png" ? 1 : 0,
-      }}
-    />
-
-    <Image
-      src="/logo2.png"
-      alt="Logo 2"
-      width={120}
-      height={120}
-      className="absolute object-contain transition-opacity duration-700"
-      style={{
-        opacity: logoSrc === "/logo2.png" ? 1 : 0,
-      }}
-    />
-
-  </div>
-</div>
-
-              </div>
+          {/* CENTER */}
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="center-core h-[260px] w-[260px] rounded-full border border-white/60 bg-[#0A0f14] flex items-center justify-center">
+              <Image src={logoSrc} alt="logo" width={150} height={150} />
             </div>
           </div>
         </div>
+      </div>
 
-        {/* DIVIDER */}
-        <div
-  className="
-    absolute
-    left-[550px]
-    top-[158px]
-    h-[72%]
-    w-[2px]
-    bg-gradient-to-b
-    from-white/0
-    via-white/18
-    to-white/0
-  "
-/>
+      {/* DIVIDER (FIXED POSITION RELATIVE TO FRAME) */}
+      <div className="w-[2px] h-[70%] bg-gradient-to-b from-transparent via-white/20 to-transparent" />
 
-        {/* RIGHT */}
-<div className="relative ml-[350px] flex h-[778px] w-[500px] items-center">
-  <div className="relative h-full w-full">
-    {[introContent, ...services].map((service, i) => (
-      <div
-        key={i}
-        ref={(el) => {
-          contentRefs.current[i] = el;
-        }}
-        className="absolute left-0 top-1/2 w-full -translate-y-1/2 will-change-transform"
-      >
-        <p className="mb-4 text-[24px] tracking-[0.35em] text-white/40">
-          {service.subtitle}
-        </p>
+      {/* RIGHT */}
+      <div className="relative w-[520px] h-[700px] flex items-center">
+        <div className="relative w-full h-full">
+          {[introContent, ...services].map((service, i) => (
+            <div
+              key={i}
+              ref={(el) => {
+                contentRefs.current[i] = el;
+              }}
+              className="absolute top-1/2 -translate-y-1/2 w-full"
+            >
+              <p className="mb-4 text-[22px] tracking-[0.3em] text-white/40">
+                {service.subtitle}
+              </p>
 
-        <h2 className="mb-6 max-w-xl text-[40px] font-light leading-[1.08] text-white">
-          {service.title}
-        </h2>
+              <h2 className="mb-6 text-[42px] font-light leading-tight text-white">
+                {service.title}
+              </h2>
 
-        <p className="max-w-xl text-[18px] leading-7 text-white/60">
-          {service.desc}
-        </p>
+              <p className="text-[18px] leading-7 text-white/60">
+                {service.desc}
+              </p>
 
-        {service.items.length > 0 && (
-          <div className="mt-10 space-y-7">
-            {service.items.map((item) => (
-              <div key={item.title} className="flex gap-5">
-                <span className="mt-2 h-2.5 w-2.5 shrink-0 rounded-full border border-white/45 bg-white/10 shadow-[0_0_18px_rgba(255,255,255,0.16)]" />
+              {service.items?.length > 0 && (
+  <div className="mt-8 space-y-6">
+    {service.items.map((item, idx) => (
+      <div key={idx} className="flex gap-4">
+        {/* dot */}
+        <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-white/40" />
 
-                <div>
-                  <p className="text-[16px] text-white">{item.title}</p>
+        {/* content */}
+        <div>
+          <p className="text-[16px] text-white">
+            {item.title}
+          </p>
 
-                  <p className="mt-2 max-w-sm text-[16px] leading-6 text-white/45">
-                    {item.desc}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-
-        <a
-          href="mailto:hello@cirle.com"
-          className="mt-10 inline-flex text-[20px] font-medium text-white transition hover:text-white/70"
-        >
-          Learn More →
-        </a>
+          <p className="mt-1 text-[14px] leading-6 text-white/50">
+            {item.desc}
+          </p>
+        </div>
       </div>
     ))}
   </div>
-</div>
-      </div>
-    </section>
-  );
-}
+)}
 
+              <a className="mt-10 inline-block text-white hover:text-white/70">
+                Learn More →
+              </a>
+            </div>
+          ))}
+        </div>
+      </div>
+
+    </div>
+  </section>
+);
+}
 
 function ServiceIcon({
   service,

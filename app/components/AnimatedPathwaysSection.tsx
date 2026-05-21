@@ -164,15 +164,14 @@ export default function AnimatedPathwaysSection() {
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_70%_50%,rgba(56,189,248,0.08),transparent_55%)]" />
 
         {/* PADDED FRAME (THIS IS THE KEY FIX) */}
-        <div className="relative h-full w-full px-6 sm:px-10 md:px-16 lg:px-30 xl:px-25">
+        <div className="relative h-full w-full px-[120px]">
           {slides.map((slide) => (
             <article
               key={slide.title}
               data-pathway-panel
               className="
                 absolute
-                left-100px
-                right-100px
+                left-[120px] right-[120px]
                 top-1/2
                 -translate-y-1/2
                 grid
@@ -205,13 +204,13 @@ export default function AnimatedPathwaysSection() {
               </div>
 
               {/* RIGHT */}
-              <div className="relative h-[700px] w-full overflow-hidden border border-white/10 bg-black/40">
-                <Image
-                  src={slide.image}
-                  alt={slide.title}
-                  fill
-                  className="object-cover"
-                />
+              <div className="relative h-[700px] w-[700px] overflow-hidden border border-white/10 bg-black/40">
+  <Image
+    src={slide.image}
+    alt={slide.title}
+    fill
+    className="object-cover object-[95%_50%]"
+  />
 
                 <div className="absolute inset-0 bg-gradient-to-tr from-black/80 via-transparent to-cyan-300/10" />
               </div>
