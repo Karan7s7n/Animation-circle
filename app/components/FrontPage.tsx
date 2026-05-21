@@ -10,7 +10,7 @@ gsap.registerPlugin(ScrollTrigger);
 const cards = [
   {
     title: "Pharmaceuticals",
-    image: "/pharma.png",
+    image: "/pharma1.png",
     nextImage: "/name1.png",
   },
   {
@@ -249,13 +249,13 @@ cards.forEach((card: Element) => {
               className="absolute inset-0"
             >
               <Image
-                src={card.image}
-                alt=""
-                fill
-                priority
-                sizes="(min-width: 640px) 33vw, 100vw"
-                className="object-cover"
-              />
+  src={card.image}
+  alt=""
+  fill
+  priority
+  sizes="(min-width: 640px) 33vw, 100vw"
+  className="object-cover object-[center_top]"
+/>
             </div>
 
             {/* NEW IMAGE */}
@@ -264,13 +264,13 @@ cards.forEach((card: Element) => {
               className="absolute inset-0"
             >
               <Image
-                src={card.nextImage}
-                alt=""
-                fill
-                priority
-                sizes="(min-width: 640px) 33vw, 100vw"
-                className="object-cover"
-              />
+  src={card.nextImage}
+  alt=""
+  fill
+  priority
+  sizes="(min-width: 640px) 33vw, 100vw"
+  className="object-cover object-[center_top]"
+/>
             </div>
 
             <div className="absolute inset-x-0 bottom-[18%] z-10 px-6 text-center sm:bottom-[22%]">

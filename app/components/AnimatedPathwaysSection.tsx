@@ -14,7 +14,7 @@ const slides = [
     desc:
       "Comprehensive learning programmes designed for regulated environments, enabling operational excellence across quality, compliance, manufacturing and leadership functions.",
     link: "Explore Training",
-    image: "/pic1.png",
+    image: "/pis1.png",
   },
   {
     eyebrow: "CONSULTING",
@@ -22,7 +22,7 @@ const slides = [
     desc:
       "Strategic advisory and operational consulting tailored to life sciences organisations navigating growth, transformation and regulatory complexity.",
     link: "Explore Consulting",
-    image: "/pic2.png",
+    image: "/pis2.png",
   },
   {
     eyebrow: "AUDITS",
@@ -30,7 +30,7 @@ const slides = [
     desc:
       "Global audit programmes and mock inspections built around real-world regulatory expectations and sustainable compliance frameworks.",
     link: "Explore Audits",
-    image: "/pic1.png",
+    image: "/pis1.png",
   },
   {
     eyebrow: "TRAINING",
@@ -38,7 +38,7 @@ const slides = [
     desc:
       "Targeted training solutions designed for life sciences professionals, ensuring compliance and operational excellence across all functions.",
     link: "Explore Training",
-    image: "/pic2.png",
+    image: "/pis2.png",
   }
 ];
 
