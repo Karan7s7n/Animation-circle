@@ -31,7 +31,7 @@ const caseStudies = [
     category: "CASE STUDY",
     title:
       "Search partnership accelerated executive hiring across regulated teams",
-    image: "/pharma.png",
+    image: "/pharma1.png",
   },
   {
     id: "5",
@@ -52,7 +52,7 @@ const caseStudies = [
     category: "CASE STUDY",
     title:
       "Clinical operations expansion strengthened delivery across EU markets",
-    image: "/pharma.png",
+    image: "/pharma1.png",
   },
 ];
 
